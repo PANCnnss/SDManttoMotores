@@ -13,7 +13,7 @@ class LoginS extends Seeder
 		$this->db->query('TRUNCATE menus_tusuarios');
 		$this->db->query('TRUNCATE tusuarios');
 		$this->db->query('TRUNCATE menus');
-		$this->db->query('TRUNCATE usuarios');
+		// $this->db->query('TRUNCATE usuarios');
 		$this->db->enableForeignKeyChecks();
 
 		$all = [];
@@ -22,9 +22,9 @@ class LoginS extends Seeder
 				'NomTUsu'
 			],
 			"data" => [
-				['Trabajador'],
-				['Jefe'],
-				['Admin'],
+				['Técnico'], //1
+				['Supervisor'], //2
+				['Admin'], //3
 			],
 		];
 		$all["menus"] = [

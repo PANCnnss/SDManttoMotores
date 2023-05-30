@@ -1,0 +1,10 @@
+Listado de Campos:
+    - Parada
+        - NomPar (vc 64) - Nombre
+        - Fec Ini (datetime) - Fecha Inicio
+        - Fec Fin (datetime) - Fecha Fin
+        - FecCre/Mod/Del - Fechas Automáticas (Creación, modificación, Eliminación)
+        - UsuCre - Usuario Creador
+    - Motor
+        - 
+    - Registro

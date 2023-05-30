@@ -116,12 +116,35 @@ class LoginM extends Migration
 		$this->forge->addForeignKey('IdTUsu','tusuarios','IdTUsu');
 		$this->forge->addForeignKey('IdMenu','menus','IdMenu');
 		$this->forge->createTable('menus_tusuarios',true);
+
+		// Vista
+		$this->db->query('
+			CREATE OR REPLACE
+				ALGORITHM = UNDEFINED 
+			VIEW `vmenu` AS
+				SELECT 
+					`t`.`IdTUsu` AS `IdTUsu`,
+					`m`.`IdMenu` AS `IdMenu`,
+					`m`.`NomMenu` AS `NomMenu`,
+					`m`.`IconMenu` AS `IconMenu`,
+					`m`.`SubMenu` AS `SubMenu`,
+					`m`.`UrlMenu` AS `UrlMenu`,
+					`m`.`PadMenu` AS `PadMenu`,
+					`m`.`OrdMenu` AS `OrdMenu`
+				FROM
+					((`tusuarios` `t`
+					JOIN `menus_tusuarios` `mt` ON ((`t`.`IdTUsu` = `mt`.`IdTUsu`)))
+					JOIN `menus` `m` ON ((`mt`.`IdMenu` = `m`.`IdMenu`)))
+				ORDER BY `t`.`IdTUsu` , `m`.`IdMenu` , `m`.`OrdMenu`;
+		');
 	}
 
 	public function down()
 	{
 		
-		// $this->forge->dropTable('menus_tusuarios',true);
-		// $this->forge->dropTable('menus',true);
+		$this->forge->dropTable('menus_tusuarios',true);
+		$this->forge->dropTable('menus',true);
+		$this->forge->dropTable('usuarios',true);
+		$this->forge->dropTable('tusuarios',true);
 	}
 }
