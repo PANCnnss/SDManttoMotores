@@ -58,20 +58,20 @@ class LoginS extends Seeder
 				['7','3',],
 			],
 		];
-		$all["usuarios"] = [
+		/*$all["usuarios"] = [
 			"camps" => [
 				'NomUsu','LogUsu','ConUsu','IdTUsu'
 			],
 			"data" => [
 				// TRAB
-				['TRAB 1','TRAB1',"Asdf1234","1"],
+				['TRAB 1','TRAB1',password_hash("Asdf1234", PASSWORD_DEFAULT),"1"],
 				// JEFE
-				['JEFE 1','JEFE1',"Asdf1234","2"],
+				['JEFE 1','JEFE1',password_hash("Asdf1234", PASSWORD_DEFAULT),"2"],
 				// ADMIN
-				['ADMIN 1','ADMIN1',"Asdf1234","3"],
+				['ADMIN 1','ADMIN1',password_hash("Asdf1234", PASSWORD_DEFAULT),"3"],
 				
 			],
-		];
+		];*/
 		foreach ($all as $k => $tab){
 			$camp = $tab['camps'];
 			foreach ($tab['data'] as $r){

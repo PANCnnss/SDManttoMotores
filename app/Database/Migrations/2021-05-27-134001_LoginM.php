@@ -48,6 +48,12 @@ class LoginM extends Migration
 				'constraint' => '100',
 				'comment' => 'Contraseña cifrada',
 			],
+			'EmpUsu' => [
+				'type'       => 'VARCHAR',
+				'constraint' => '32',
+				'null' => true,
+				'comment' => 'Empresa del Usuario',
+			],
 			'IdTUsu' => [
 				'type'       => 'INT',
 				'constraint' => '11',

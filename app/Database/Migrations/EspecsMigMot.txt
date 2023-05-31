@@ -1,10 +1,104 @@
 Listado de Campos:
-    - Parada
+    OK- Imágenes (imagenes):
+        - IdImg (u int)
+        - TipImg (int 1) - Tipo de Imagen (0: Registro Pernos)
+        - IdRef (u int) - Id referencia a la tabla que corresponda
+        - UrlImg (vc 128) - Url de la imagen
+        - PesoImg (int 4) - Peso en Mb
+        - UsuCre (u int) - Usuario Creador
+        - FecCre (date) - Fecha Creación
+    OK- Parada (paradas)
+        - IdPar
         - NomPar (vc 64) - Nombre
+        - DescPar (vc 128) - Descripción detallada Parada
         - Fec Ini (datetime) - Fecha Inicio
         - Fec Fin (datetime) - Fecha Fin
-        - FecCre/Mod/Del - Fechas Automáticas (Creación, modificación, Eliminación)
+        - FecCre/Mod/Del (date) - Fechas Automáticas (Creación, modificación, Eliminación)
         - UsuCre - Usuario Creador
-    - Motor
-        - 
-    - Registro
+        - UsuSup - Usuario Supervisor
+        - Estado (int 1) - Estado parada, 0: Pendiente (defecto), 1: Iniciado (Tecnico), 2: Completado (Tecnico) [Deshabilita Edición], 3: Entregado (Supervisor)
+    OK- Motor (motores):
+        - IdMot
+        - NomMot (vc 32)
+        - TagMot (vc 64)
+        - MarcaMot (vc 24)
+        - SerieMot (vc 24)
+        - PotenciaMot (int 4)
+        - TensionMot (vc 24)
+        - CorrienteMot (vc 24)
+        - VelocidadMot (u int)
+        - UsuCre (u int) - Usuario Creador
+        - FecCre/Mod/Del (date) - Fechas Automáticas (Creación, modificación, Eliminación)
+    OK- Registro Evaluación (regevalmot)
+        - IdReg
+        - UsuCre - Usuario que crea el Registro
+        - UsuMod - Usuario que Edita el Registro (Por última vez)
+        - UsuSup - Usuario Supervisor
+        - FecCre/Mod/Del (date) - Fechas Automáticas (Creación, modificación, Eliminación)
+        - IdMot - Id del motor evaluado
+        - EstReg - Estado del Registro, 0: Pendiente (defecto), 1: Iniciado (Tecnico), 2: Completado (Tecnico) [Deshabilita Edición], 3: Entregado (Supervisor)
+        - HabPruResTieReg - Habilitado Pruebas de Resistencia de Aislamiento a Tierra
+            # Megómetro
+                - MegMegaReg - Megómetro Megabras nombre
+                - MegSerieReg - Número de Serie Megómetro
+                - MegTpruReg - Tensión de Pruebas
+                - MegTambReg - Temperatura Ambiente
+                - MegTiPruReg - Tiempo de Prueba
+            # Datos Prueba
+                - MPru30sLectReg (decimal 4,1) - Lectura Giga Ohms 30 segundos
+                - MPru30sIndReg (vc 24) - Índice Ej IA = 1.70
+                - MPru30sObsReg (vc 128) - Observaciones
+                - MPru60sLectReg (decimal 4,1) - Lectura Giga Ohms 30 segundos
+                - MPru60sIndReg (vc 24) - Índice Ej IA = 1.70
+                - MPru60sObsReg (vc 128) - Observaciones
+        - HabPruResOhmReg - Habilitado Pruebas de Resistencia Óhmica
+            # Microhmímetro
+                - MicMetReg (vc 24) - Metrel de Microhmímetro
+                - MicCertCalReg (vc 24) - N° Cert Calibración
+                - MicTempAmbReg (vc 24) - Temperatura Ambiente Microhmímetro
+                - MicConPruReg (vc 24) - Conexión de Prueba
+            # Datos de Prueba
+                # Lectura:
+                    - MicLec12Reg (decimal 4,3) - Lectura en Ohmios
+                    - MicLec23Reg (decimal 4,3) - Lectura en Ohmios
+                    - MicLec31Reg (decimal 4,3) - Lectura en Ohmios
+                # Desbalance:
+                    - MicDes12Reg (decimal 4,3) - Desbalance en Porcentaje
+                    - MicDes23Reg (decimal 4,3) - Desbalance en Porcentaje
+                    - MicDes31Reg (decimal 4,3) - Desbalance en Porcentaje
+                # Resultados:
+                    - MicRes12Reg (vc 24) - Resultado en texto
+                    - MicRes23Reg (vc 24) - Resultado en texto
+                    - MicRes31Reg (vc 24) - Resultado en texto
+                # Observaciones:
+                    - MicObs12Reg (vc 128) - Observaciones
+                    - MicObs23Reg (vc 128) - Observaciones
+                    - MicObs31Reg (vc 128) - Observaciones
+        - HabTorqueReg - Habilitado Solicita Torque de Pernos
+            # Verificaciones Previas:
+                - TorLimPerReg (int 1) - Limpieza Pernos (0: No, 1: Sí, 2: N/A)
+                - TorLimTueReg (int 1) - Limpieza Tuercas (0: No, 1: Sí, 2: N/A)
+                - TorLimCarReg (int 1) - Limpieza Caras de Bridas (0: No, 1: Sí, 2: N/A)
+                - TorRevPerReg (int 1) - Pernos Revisados (0: No, 1: Sí, 2: N/A)
+        # Llave Usada Torquímetro 1
+            - LlaveRangoReg (vc 24) - Rango
+            - LlaveMarcaReg (vc 24) - Marca
+            - LlaveNroCertReg (vc 24) - N° Certificado
+            - LlaveNroSerieReg (vc 24) - N° Serie
+    OK- Sugerencias Registro Motor (sugregmot):
+        - IdSug
+        - IdReg
+        - TextoSug (vc 128)
+        - CritiSug (int 1) - Criticidad 1: Correcto, 2: Advertencia, 3: Grave
+        - IdTec - Id del técnico que generó la sugerencia
+        - FecSug - Fecha de creación de la sugerencia
+    OK- Registro Pernos (regpermot):
+        - IdRegPer
+        - IdReg
+        - NroPer (vc 24) - Nro de Perno
+        - GDurPer (int 4) - Grado de Dureza
+        - TipPer (int 1) - Tipo Perno (0: SECO)
+        - DiaPulPer (vc 8) - Diámetro de Pulgada
+        - TorMedPer (int 4) - Torque Medido (ft/lb)
+        - FecPer (date) - Fecha de Medición
+        - ObsPer (vc 128) - Observaciones

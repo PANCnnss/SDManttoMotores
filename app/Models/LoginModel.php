@@ -49,8 +49,8 @@ class LoginModel extends Model
         // ->getWhere(['LogUsu' => $nom, 'ConUsu' => $pas],1);
         ->getWhere(['LogUsu' => $nom],1)
         ->getRowArray();
-        // return (is_null($q)?null:(password_verify($pas, $q["ConUsu"])?$q:null)); //Activar para verificar contraseña utilizando hash
-        return (is_null($q)?null:($pas == $q["ConUsu"]?$q:null));
+        return (is_null($q)?null:(password_verify($pas, $q["ConUsu"])?$q:null)); //Activar para verificar contraseña utilizando hash
+        // return (is_null($q)?null:($pas == $q["ConUsu"]?$q:null));
     }
 
 	public function getMenus()
