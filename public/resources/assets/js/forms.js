@@ -153,6 +153,44 @@ function cajax(fun,data,text="",sub="",ret=true){
     },data,text,sub)
 }
 
+// Enviar ajax y ejecutar fn con los datos resultantes del ajax
+function fajax(fun,data,fn){
+    // console.log("Send Data",data,"fun>",(cadenaurl + ctrl + "/"+fun));
+    request = $.ajax({
+        url: cadenaurl + ctrl + "/"+fun,
+        type: "post",
+        data: data
+        // data: "codigo=1&hora=12:30"
+    });
+
+    // Callback handler that will be called on success
+    request.done(function(response, textStatus, jqXHR) {
+        // Log a message to the console
+        jr = response;
+        if (jr.r)
+            fn(jr)
+        else
+            Swal.fire({
+                title: "Error",
+                text: jr.m,
+                buttonsStyling: false,
+                confirmButtonClass: "btn btn-danger btn-fill",
+                type: "error"
+            }).then((result) => {
+                // window.location = window.location;
+            });
+    });
+    request.fail(function(jqXHR, textStatus, errorThrown) {
+        Swal.fire({
+            title: "Error en el Servidor",
+            text: "Puede haber un error en el programa o no haber conexión a internet.",
+            buttonsStyling: false,
+            confirmButtonClass: "btn btn-danger btn-fill",
+            type: "error"
+        }).then((result) => {});
+    });
+}
+
 //Al confirmar se ejecuta la funcion fun usando data como parametro
 function confirm(fun, data, text = "¿Seguro de que quiere eliminar el registro?", sub="La eliminación será permanente") {
     Swal.fire({
