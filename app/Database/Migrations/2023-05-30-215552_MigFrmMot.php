@@ -14,6 +14,7 @@ class MigFrmMot extends Migration
 				'TipImg' => [ 'type'=> 'INT', 'constraint'=> 1, 'default' => 0,'comment' => 'Tipo de Imagen (0: Registro Pernos)',],
 				'IdRef' => [ 'type'=> 'INT', 'constraint'=> 11, 'unsigned'=> true,'comment' => 'Id referencia a la tabla que corresponda',],
 				'UrlImg' => [ 'type'=> 'varchar', 'constraint'=> 128,'comment' => 'Url de la imagen',],
+				'TypeImg' => [ 'type'=> 'varchar', 'constraint'=> 24,'comment' => 'Mymetype de la imagen',],
 				'PesoImg' => [ 'type'=> 'INT', 'constraint'=> 11,'comment' => 'Peso en Mb',],
 				'UsuCre' => [ 'type'=> 'INT', 'constraint'=> 11, 'unsigned'=> true, 'comment' => 'Usuario Creador',],
 				'FecCre timestamp default now()',
