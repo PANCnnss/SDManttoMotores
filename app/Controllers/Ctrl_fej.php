@@ -664,4 +664,20 @@ class Ctrl_fej extends BaseController
 		}
 
 	}
+
+	public function reportePDF()
+	{
+		if(!session()->get("IdUsu")) return redirect()->to('/login');
+
+		$d = $this->data;
+		//JS
+			array_push($d["js"],base_url('theme/dist/js/custom.min.js'));
+			array_push($d["js"],'https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.0/perfect-scrollbar.min.js');
+			array_push($d["js"], base_url("resources/assets/js/lists.js")); //js para todas las listas
+			
+			array_push($d["css"],base_url('theme/dist/css/style.min.css'));
+			array_push($d["css"],'https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.0/css/perfect-scrollbar.min.css');
+		
+		return view('ctrl_fej/reportePDF',$d);
+	}
 }

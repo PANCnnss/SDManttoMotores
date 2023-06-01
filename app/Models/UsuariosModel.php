@@ -56,4 +56,15 @@ class UsuariosModel extends Model
             ->getWhere(['IdTUsu'=>session()->get('IdTUsu')]);
         return $q;
     }
+
+	public function listUsuarios(){
+        $this->db->transStart();
+		$q = $this->db->table('usuarios as u')
+		->select("IdUsu, NomUsu, LogUsu, t.NomTUsu as TipoUsu")
+		->join("tusuarios as t", "t.IdTUsu = u.IdTUsu")
+		->get()
+		->getResultArray();
+		$this->db->transComplete();
+		return $q;
+    }
 }

@@ -225,4 +225,115 @@ class Usuarios extends BaseController
 		print_r($key); //usar hex2bin:<key> para almacenar
 
 	}
+
+	public function listaUsu()
+	{
+		if (!session()->get("IdUsu")) return redirect()->to('/login');
+        $d = $this->data;
+		$d["cols"] = json_encode([
+			["data"=>  'IdUsu', "title"=> 'ID', "className"=> "text-center", "type" => "num"], //
+			["data"=> 'NomUsu', "title"=> 'Nombre del usuario', "className"=> "text-center", "type" => "text"], //
+			["data"=> 'LogUsu', "title"=> 'Login Usuario', "className"=> "text-center", "type" => "text"], //
+			["data"=> 'TipoUsu', "title"=> 'Tipo Usuario', "className"=> "text-center", "type" => "text"], //
+            ["data"=> null, "defaultContent" => "", "className" => "text-center","title" => "ACCIONES"], //Acciones
+		]);
+        // JS
+			array_push($d["js"], base_url('resources/assets/js/perfect-scrollbar.min.js'));
+			array_push($d["js"], base_url('theme/src/assets/libs/select2/dist/js/select2.full.min.js'));
+			array_push($d["js"], base_url('theme/src/assets/libs/select2/dist/js/select2.min.js'));
+			array_push($d["js"], base_url('theme/dist/js/pages/forms/select2/select2.init.js'));
+			array_push($d["js"], base_url('theme/src/assets/libs/jquery-validation/dist/jquery.validate.min.js')); //js para todos los forms
+			array_push($d["js"], base_url('theme/src/assets/libs/jquery-validation/dist/additional-methods.js')); //js para todos los forms 
+			array_push($d["js"], base_url('theme/src/assets/libs/moment/moment.js'));
+			array_push($d["js"], base_url('resources/assets/js/bootstrap-datetimepicker.js'));
+			array_push($d["js"], base_url("resources/assets/js/forms.js")); //js para todos los forms
+			array_push($d["js"], base_url("theme/src/assets/libs/dropzone/dist/min/dropzone.min.js")); //js para todos los forms
+			
+		//CSS
+			array_push($d["css"],base_url('theme/src/assets/libs/daterangepicker/daterangepicker.css'));
+			array_push($d["css"], base_url('theme/src/assets/libs/select2/dist/css/select2.min.css'));
+			array_push($d["css"], base_url('theme/src/assets/libs/dropzone/dist/min/dropzone.min.css'));
+        
+		return view('usuarios/lista', $d);
+	}
+
+	public function ajaxAllUsuarios(){
+        if(!session()->get("IdUsu")) return redirect()->to('/login');
+		return $this->setResponseFormat('json')->respond(["data" => $this->model->listUsuarios()]);
+    }
+
+	public function newUsuario(){
+        if(!session()->get("IdUsu")) return redirect()->to('/login');
+
+        // Obtencion Datos formularios
+        $postUsuario = [
+            'NomUsu' => $this->request->getVar('NomUsu'),
+            'LogUsu' => $this->request->getVar('LogUsu'),
+            'ConUsu' => $this->request->getVar('ConUsu'),
+            'IdTUsu' => $this->request->getVar('IdTUsu'),
+        ];
+        try{
+
+            $this->model->db->transStart();
+                $b1 = $this->model->db->table('usuarios')->insert($postUsuario);            
+            $this->model->db->transComplete();
+
+            if($b1) return $this->setResponseFormat('json')->respond(["m" => "Usuario Creado", "r"=>true]);
+            else return $this->setResponseFormat('json')->respond(["m" => "Datos erróneos", "r"=>true]);
+
+        }catch (\Throwable $e) {
+            return $this->setResponseFormat('json')->respond(["m" => $e, "r"=>false]);
+        }
+    }
+
+	//EDICION AREA
+	public function editUsuario($id){
+		if(!session()->get("IdUsu")) return redirect()->to('/login');
+
+		try{
+			$area = $this->model->db->table("usuarios")->where('IdUsu', $id)->get(1)->getRowArray();
+
+		}catch (\Throwable $e) {
+			return $this->setResponseFormat('json')->respond(["m" => $e, "r"=>false]);
+		}
+		return $this->setResponseFormat('json')->respond($area);
+	}
+
+	// UPDATE AREA
+	public function updateUsuario(){
+		if(!session()->get("IdUsu")) return redirect()->to('/login');
+		$id = $this->request->getVar('IdUsu');
+
+		$updateUsuario = [
+            'NomUsu' => $this->request->getVar('NomUsu'),
+            'LogUsu' => $this->request->getVar('LogUsu'),
+            'ConUsu' => $this->request->getVar('ConUsu'),
+            'IdTUsu' => $this->request->getVar('IdTUsu'),
+        ];
+
+		try{
+			$b = $this->model->db->table('usuarios')->where(["IdUsu"=> $id])->update($updateUsuario);
+
+			if($b) return $this->setResponseFormat('json')->respond(["m" => "Equipo Editado", "r"=>true]);
+			else return $this->setResponseFormat('json')->respond(["m" => "Datos erróneos", "r"=>false]);
+		}catch (\Throwable $e) {
+			return $this->setResponseFormat('json')->respond(["m" => $e, "r"=>false]);
+		}
+	}
+
+	//Para la eliminacion de un registro
+	public function eliminarUsuario($id)
+	{
+	if(!session()->get("IdUsu")) return redirect()->to('/login');
+		try {
+
+			$q = $this->model->db->table('usuarios')->where(["IdUsu" => $id])->delete();
+			
+			if($q) return $this->setResponseFormat('json')->respond(["m" => "Operación Correcta", "r"=>true,]);
+
+			else return $this->setResponseFormat('json')->respond(["m" => "Puede que no haya conexión o que haya un error en el servidor", "r"=>false]);
+		} catch (\Throwable $th) {
+			return $this->setResponseFormat('json')->respond(["m" => "Puede que no haya conexión o que haya un error en el servidor", "r"=>false, "msg" => $th->getMessage()." L> ".$th->getLine()]);
+		}
+	}
 }
