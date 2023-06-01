@@ -13,7 +13,7 @@ class LoginS extends Seeder
 		$this->db->query('TRUNCATE menus_tusuarios');
 		$this->db->query('TRUNCATE tusuarios');
 		$this->db->query('TRUNCATE menus');
-		// $this->db->query('TRUNCATE usuarios');
+		$this->db->query('TRUNCATE usuarios');
 		$this->db->enableForeignKeyChecks();
 
 		$all = [];
@@ -58,7 +58,7 @@ class LoginS extends Seeder
 				['7','3',],
 			],
 		];
-		/*$all["usuarios"] = [
+		$all["usuarios"] = [
 			"camps" => [
 				'NomUsu','LogUsu','ConUsu','IdTUsu'
 			],
@@ -71,7 +71,7 @@ class LoginS extends Seeder
 				['ADMIN 1','ADMIN1',password_hash("Asdf1234", PASSWORD_DEFAULT),"3"],
 				
 			],
-		];*/
+		];
 		foreach ($all as $k => $tab){
 			$camp = $tab['camps'];
 			foreach ($tab['data'] as $r){

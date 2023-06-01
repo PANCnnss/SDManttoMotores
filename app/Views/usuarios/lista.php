@@ -51,9 +51,13 @@
                     <label for="conusu">Contraseña:</label>
                     <input id="conusu" class="form-control" type="password" name="ConUsu">
                 </div>
-                <div class="col form-group">
+                <div class="form-group col">
                     <label for="idtusu">Tipo Usuario:</label>
-                    <input id="idtusu" class="form-control" type="text" name="IdTUsu">
+                    <select id="idtusu" class="form-control">
+                      <option value="1">Técnico</option>
+                      <option value="2">Supervisor</option>
+                      <option value="3">Admin</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -127,7 +131,7 @@
                 $('#idusu').val(response.IdUsu)
                 $('#nomusu').val(response.NomUsu)
                 $('#logusu').val(response.LogUsu)
-                $('#conusu').val(response.ConUsu)
+                // $('#conusu').val(response.ConUsu)
                 $('#idtusu').val(response.IdTUsu)
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -137,7 +141,7 @@
   }
 
 
-  //ELIMINAR EQUIPO
+  //ELIMINAR USUARIO
   function delUsuario(id) {
     Swal.fire({
       title: "Usted desea Eliminar esta Usuario?",
@@ -159,7 +163,7 @@
     });
 </script>
 
-<!-- NUEVA AREA Y ACTUALIZACION AREA-->
+<!-- NUEVO USUARIO Y ACTUALIZACION USUARIO-->
 <script>
   $(document).ready(function() {
     $('#postUsuario').validate({
@@ -213,4 +217,5 @@
     });
 
 </script>
+
 <?= $this->endSection() ?>
