@@ -73,7 +73,6 @@ class LoginS extends Seeder
 				
 			],
 		];
-		echo "-------------SEED----------------\n";
 		foreach ($all as $k => $tab){
 			$camp = $tab['camps'];
 			$nreg = 0;
