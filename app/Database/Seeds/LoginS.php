@@ -14,7 +14,7 @@ class LoginS extends Seeder
 		$this->db->query('TRUNCATE tusuarios');
 		$this->db->query('TRUNCATE menus');
 		// $this->db->query('TRUNCATE usuarios');
-		$this->db->enableForeignKeyChecks();
+		
 
 		$all = [];
 		$all["tusuarios"] = [
@@ -65,9 +65,9 @@ class LoginS extends Seeder
 			],
 			"data" => [
 				// TRAB
-				// ['TRAB 1','TRAB1',password_hash("Asdf1234", PASSWORD_DEFAULT),"1"],
+				// ['TECNICO 1','TEC1',password_hash("Asdf1234", PASSWORD_DEFAULT),"1"],
 				// // JEFE
-				// ['JEFE 1','JEFE1',password_hash("Asdf1234", PASSWORD_DEFAULT),"2"],
+				// ['SUPERVISOR 1','SUP1',password_hash("Asdf1234", PASSWORD_DEFAULT),"2"],
 				// // ADMIN
 				// ['ADMIN 1','ADMIN1',password_hash("Asdf1234", PASSWORD_DEFAULT),"3"],
 				
@@ -87,5 +87,6 @@ class LoginS extends Seeder
 			}
 			echo "\t Seed $k ($nreg) \n";
 		}
+		$this->db->enableForeignKeyChecks();
 	}
 }

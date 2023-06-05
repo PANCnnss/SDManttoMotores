@@ -57,20 +57,22 @@ class Manttomot extends BaseController
 
 		$d = $this->data;
 		$d["cols"] = json_encode([
-			["data"=> 'FcreLiq', "title"=> "Fecha", "className"=> "text-center"], //Fecha
-			["data"=> 'NroLiq', "title"=> "Nº Liq", "className"=> "text-center"], //Nro
-			["data"=> 'TotLiq', "title"=> "Total", "className"=> "text-center"], //Total
-			["data"=> 'SalLiq', "title"=> "Saldo", "className"=> "text-center"], //Saldo
-			["data"=> 'EstLiq', "title"=> "Estado", "className"=> "text-center"], //Estado (pastillas)
+			["data"=> 'IdPar', "title"=> "ID", "className"=> "text-center"], 
+			["data"=> 'NomPar', "title"=> "Nombre", "className"=> "text-center"], 
+			["data"=> 'DescPar', "title"=> "Descripción", "className"=> "text-center"], 
+			["data"=> 'FecIni', "title"=> "Inicio", "className"=> "text-center"], 
+			["data"=> 'FecFin', "title"=> "Fin", "className"=> "text-center"], 
+			["data"=> 'NomUsuCre', "title"=> "Tecnico", "className"=> "text-center"], 
+			["data"=> 'NomUsuCre', "title"=> "Supervisor", "className"=> "text-center"], 
+			["data"=> 'EstPar', "title"=> "Estado", "className"=> "text-center"], 
 			["data"=> null, "defaultContent" => "", "title" => "ACCIONES"], //Acciones
 		]);
 		$d["colsr"] = json_encode([ //Columnas liqs trabajadores
-			["data"=> 'FcreLiq', "title"=> "Fecha", "className"=> "text-center"], //Fecha
-			["data"=> 'LogUsu', "title"=> "Usuario", "className"=> "text-center", "visible"=> true], //Nro
-			["data"=> 'NroLiq', "title"=> "Nº Liq", "className"=> "text-center"], //Nro
-			["data"=> 'TotLiq', "title"=> "Total", "className"=> "text-center"], //Total
-			["data"=> 'SalLiq', "title"=> "Saldo", "className"=> "text-center"], //Saldo
-			["data"=> 'EstLiq', "title"=> "Estado", "className"=> "text-center"], //Estado (pastillas)
+			["data"=> 'IdReg', "title"=> "ID", "className"=> "text-center"], 
+			["data"=> 'NomUsuCre', "title"=> "Tecnico", "className"=> "text-center", "visible"=> true], 
+			["data"=> 'NomUsuSup', "title"=> "Supervisor", "className"=> "text-center", "visible"=> true], 
+			["data"=> 'FecEfec', "title"=> "Fecha", "className"=> "text-center"], 
+			["data"=> 'EstReg', "title"=> "Estado", "className"=> "text-center"], 
 			["data"=> null, "defaultContent" => "", "title" => "ACCIONES"], //Acciones
 		]);
 		//JS
@@ -103,7 +105,6 @@ class Manttomot extends BaseController
 		$d["id"] = null;
 		$d["dtreg"] = null;
 		$b = false; //Desactivado?
-		$d = array_merge($d,$this->preProc());
 		$d = array_merge($d,$this->getInp(["plu"=>$d["lu"],"id"=>null,"plgp"=>$d["plgp"],"b"=>$b]));
 		$d["b2"] = $b;
 		// JS
@@ -127,13 +128,20 @@ class Manttomot extends BaseController
 	{
 		if(!session()->get("IdUsu")) return redirect()->to('/login');
 		$d = $this->data;
-		$d["dtreg"] = $this->model->select("*,date(FupdLiq) as FupdLiq, date(FcreLiq) as FcreLiq")->find($id);
+		$d["dtreg"] = $this->model->db->table('regevalmot')
+			->select("regevalmot.*,
+				ucre.NomUsu as NomUsuCre,usup.NomUsu as NomUsuSup,umod.NomUsu as NomUsuMod,
+				par.NomPar,par.DescPar,par.FecIni,par.FecFin,mot.*")
+			->join("usuarios ucre","ucre.IdUsu = regevalmot.UsuCre")
+			->join("usuarios usup","usup.IdUsu = regevalmot.UsuSup","left")
+			->join("usuarios umod","umod.IdUsu = regevalmot.UsuMod","left")
+			->join("paradas par","par.IdPar = regevalmot.IdPar")
+			->join("motores mot","mot.IdMot = regevalmot.IdMot",'left')
+			->where(["IdReg"=>$id])->get(1)->getResultArray()[0];
 		$d["id"] = $id;
 
 		$b = false; //Desactivado?
-		$d["b2"] = $b;
-		$d = array_merge($d,$this->preProc());
-		$d = array_merge($d,$this->getInp(["plu"=>$d["lu"],"id"=>null,"plgp"=>$d["plgp"],"b"=>$b]));
+		$d = array_merge($d,$this->getInp(["b"=>$b]));
 		// JS
 			array_push($d["js"],'https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.0/perfect-scrollbar.min.js');
 			array_push($d["js"],base_url('theme/src/assets/libs/select2/dist/js/select2.full.min.js'));
@@ -152,52 +160,6 @@ class Manttomot extends BaseController
 
 		return view('manttomot/editar',$d);
 	}
-	public function ver($id)
-	{
-		if(!session()->get("IdUsu")) return redirect()->to('/login');
-		$d = $this->data;
-		$d["dtreg"] = $this->model->select("*,date(FupdLiq) as FupdLiq, date(FcreLiq) as FcreLiq")->find($id);
-		$d["id"] = $id;
-
-		$b = true; //Desactivado?
-		$d["b2"] = $b;
-		$d = array_merge($d,$this->preProc());
-		$d = array_merge($d,$this->getInp(["plu"=>$d["lu"],"id"=>null,"plgp"=>$d["plgp"],"b"=>$b]));
-		// JS
-			array_push($d["js"],'https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.0/perfect-scrollbar.min.js');
-			array_push($d["js"],base_url('theme/src/assets/libs/select2/dist/js/select2.full.min.js'));
-			array_push($d["js"],base_url('theme/src/assets/libs/select2/dist/js/select2.min.js'));
-			array_push($d["js"],base_url('theme/dist/js/pages/forms/select2/select2.init.js'));
-			array_push($d["js"], base_url('theme/src/assets/libs/jquery-validation/dist/jquery.validate.min.js')); //js para todos los forms
-			array_push($d["js"], base_url('theme/src/assets/libs/jquery-validation/dist/additional-methods.js')); //js para todos los forms 
-			array_push($d["js"], base_url('theme/src/assets/libs/moment/moment.js'));
-			array_push($d["js"], base_url('resources/assets/js/bootstrap-datetimepicker.js'));
-			array_push($d["js"], base_url("resources/assets/js/forms.js")); //js para todos los forms
-			array_push($d["js"], base_url("theme/src/assets/libs/dropzone/dist/min/dropzone.min.js")); //js para todos los forms
-		//CSS
-			array_push($d["css"],base_url('theme/src/assets/libs/select2/dist/css/select2.min.css'));
-			array_push($d["css"],base_url('theme/src/assets/libs/dropzone/dist/min/dropzone.min.css'));
-			array_push($d["css"],'https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.0/css/perfect-scrollbar.min.css');
-
-		return view('liqs/editar',$d);
-	}
-	public function preProc()
-	{
-		$d = [];
-		$mu = model("UsuariosModel");
-		
-		$lu = $mu->where(["IdTUsu" => 4])->findAll(); //Obtener lista de Jefes y revisores
-		$plu = [""=>"Seleccionar"];
-
-		foreach ($lu as $us) $plu[$us["IdUsu"]] = $us["NomUsu"]; //Procesar
-		$d["lu"] = $plu;
-		
-		$lgp = $this->model->db->table("gpresup")->select("IdGpres, concat(CcGpres,' - ',NomGpres) as NomGpres")->get()->getResultArray(); //Lista de grupo de presupuesto
-		$plgp = [""=>"Seleccionar"];
-		foreach ($lgp as $gp) $plgp[$gp["IdGpres"]] = $gp["NomGpres"]; //Procesar
-		$d["plgp"] = $plgp;
-		return $d;
-	}
 	public function getInp($a)
 	{
 		/*
@@ -207,223 +169,41 @@ class Manttomot extends BaseController
 			b: editar?
 		*/
 		$d = [];
-		$d["inp1"] = [//Lista de Inputs
-			[// ID
-				"class" => '',
-				"wdth" => 0, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"data" => ['type' => 'hidden', 'name' => 'IdLiq', 'id' => 'IdLiq'], //Opciones, si es un select, sino Otros atributos
+		$d["inpreg"] = [//Inputs Registro Motor
+			// L1
+			/*h ID*/ [ "class" => '', "wdth" => 0,"type" => 'input',"data" => ['type' => 'hidden', 'name' => 'IdReg', 'id' => 'IdReg'], ],
+			/*Legend*/ [ "class" => 'col-md-12',"wdth" => 12,"type" => 'legend',"label" => 'Encabezado',],
+			/*3 Técnico*/ [ "class" => 'col-md-3', "wdth" => 3, "type" => 'input', "label" => 'Técnico',"disabled" => true,"data" => ['type' => 'text','name' => 'NomUsuCre', 'class' => 'form-control', /*'required' => 'true',*/ ], ],
+			/*3 Modificado Por*/ [ "class" => 'col-md-3', "wdth" => 3, "type" => 'input', "label" => 'Modificado Por',"disabled" => true,"data" => ['type' => 'text','name' => 'NomUsuMod', 'class' => 'form-control', /*'required' => 'true',*/ ], ],
+			/*3 Supervisor*/ ["class" => 'col-md-3 mb-3',"wdth" => 3,"type" => 'select',"label" => 'Supervisor',"disabled" => $a["b"],
+				"data" => ['name' => 'UsuSup',"id"=>"UsuSup", 'class' => 'form-control', "style" => "width: 100%;", "required" => "true"], //Opciones, si es un select, sino Otros atributos
+				"options" => $this->model->getOptArray("usuarios","NomUsu","IdUsu",['IdTUsu'=>2],true), //Opciones, si es un select, sino Otros atributos
 			],
-			[//Legend Encabezado
-				"class" => 'col-md-12', //Clase del div que lo contiene
-				"wdth" => 12, //Peso, si llega a 12 nuevo row
-				"type" => 'legend', //select, input, legend, check, button, text
-				"label" => 'Encabezado',
-			],
-			[// 2 Modificacion
-				"class" => 'col-md-2 mb-3', //Clase del div que lo contiene
-				"wdth" => 2, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"label" => 'Modificación',
-				"data" => ['type' => 'date','name' => 'FupdLiq', 'id' => 'FupdLiq', 'class' => 'form-control', "disabled" => "true", 'value' => date("Y-m-d"),], //Opciones, si es un select, sino Otros atributos
-			],
-			[// 2 Creación
-				"class" => 'col-md-2 mb-3', //Clase del div que lo contiene
-				"wdth" => 2, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"label" => 'Creación',
-				"data" => ['type' => 'date','name' => 'FcreLiq', 'id' => 'FcreLiq', 'class' => 'form-control', 'disabled' => "true", 'value' => date("Y-m-d"),], //Opciones, si es un select, sino Otros atributos
-			],
-			[//Legend Datos
-				"class" => 'col-md-12', //Clase del div que lo contiene
-				"wdth" => 12, //Peso, si llega a 12 nuevo row
-				"type" => 'legend', //select, input, legend, check, button, text
-				"label" => 'Datos',
-			],
-			[// 4 Nro Liq
-				"class" => 'col-md-4 mb-4', //Clase del div que lo contiene
-				"wdth" => 4, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"label" => 'Nombre Liquidación (Nº)',
-				"disabled" => $a["b"],
-				'valid-feed' => "Correcto",
-				'invalid-feed' => "Campo Obligatorio",
-				"data" => ['type' => 'text','name' => 'NroLiq', 'id' => 'NroLiq', 'class' => 'form-control', 'required' => 'true', ], //Opciones, si es un select, sino Otros atributos
-			],
-			[// 4 Centro Costos
-				"class" => 'col-md-4 mb-4', //Clase del div que lo contiene
-				"wdth" => 4, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"label" => 'Centro de Costos',
-				"disabled" => $a["b"],
-				"data" => ['type' => 'text','name' => 'CcosLiq', 'id' => 'CcosLiq', 'class' => 'form-control', ], //Opciones, si es un select, sino Otros atributos
-			],
-			[// 4 OC
-				"class" => 'col-md-4 mb-4', //Clase del div que lo contiene
-				"wdth" => 4, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"label" => 'OC (Nº)',
-				"disabled" => $a["b"],
-				"data" => ['type' => 'text','name' => 'OcLiq', 'id' => 'OcLiq', 'class' => 'form-control', ], //Opciones, si es un select, sino Otros atributos
-			],
-			[// 4 Tipo
-				"class" => 'col-md-4 mb-4', //Clase del div que lo contiene
-				"wdth" => 4, //Peso, si llega a 12 nuevo row
-				"type" => 'select', //select, input, legend, check, button, text
-				"label" => 'Tipo Liq',
-				"disabled" => $a["b"],
-				"data" => ['name' => 'TipoLiq', 'class' => 'select2 form-control custom-select', "style" => "width: 100%;",], //Opciones, si es un select, sino Otros atributos
-				"options" => ["1" => "Normal","2" => "Especial",], //Opciones, si es un select, sino Otros atributos
-			],
-			[// 4 Estado
-				"class" => 'col-md-4 mb-4', //Clase del div que lo contiene
-				"wdth" => 4, //Peso, si llega a 12 nuevo row
-				"type" => 'select', //select, input, legend, check, button, text
-				"label" => 'Estado',
-				"disabled" => $a["b"],
-				"data" => ['name' => 'EstLiq', 'class' => 'select2 form-control custom-select', "style" => "width: 100%;",], //Opciones, si es un select, sino Otros atributos
-				"options" => ["0" => "Pendiente","1" => "Pagada",], //Opciones, si es un select, sino Otros atributos
-			],
-			[// 4 Revisor
-				"class" => 'col-md-4 mb-4', //Clase del div que lo contiene
-				"wdth" => 4, //Peso, si llega a 12 nuevo row
-				"type" => 'select', //select, input, legend, check, button, text
-				"label" => 'Revisor',
-				"disabled" => $a["b"],
-				"data" => ['name' => 'IdRevisor', 'class' => 'select2 form-control custom-select', "style" => "width: 100%;",], //Opciones, si es un select, sino Otros atributos
-				"options" => $a['plu'], //Opciones, si es un select, sino Otros atributos
-			],
+			/*3 Fecha Efectuado*/ [ "class" => 'col-md-3', "wdth" => 3, "type" => 'input', "label" => 'Fecha Efectuado',"disabled" => $a["b"],'valid-feed' => "Correcto",'invalid-feed' => "Campo Obligatorio","data" => ['type' => 'date','name' => 'FecEfec', 'id' => 'FecEfec', 'class' => 'form-control', /*'required' => 'true',*/ ], ],
+			// L2
+			/*Legend*/ [ "class" => 'col-md-12',"wdth" => 12,"type" => 'legend',"label" => 'Datos parada',],
+			/*3 Nombre Parada*/ [ "class" => 'col-md-3', "wdth" => 3, "type" => 'input', "label" => 'Parada',"disabled" => true,"data" => ['type' => 'text','name' => 'NomPar','id' => 'NomPar', 'class' => 'form-control', /*'required' => 'true',*/ ], ],
+			/*9 Descripción Parada*/ [ "class" => 'col-md-9', "wdth" => 9, "type" => 'input', "label" => 'Descripción',"disabled" => true,"data" => ['type' => 'text','name' => 'DescPar','id' => 'DescPar', 'class' => 'form-control', /*'required' => 'true',*/ ], ],
+			// L2
+			/*Legend*/ [ "class" => 'col-md-12',"wdth" => 12,"type" => 'legend',"label" => 'Datos Motor',],
+			/*3 Nombre Motor*/ [ "class" => 'col-md-3', "wdth" => 3, "type" => 'input', "label" => 'Nombre',"disabled" => true,"data" => ['type' => 'text','name' => 'NomMot','id' => 'NomMot', 'class' => 'form-control', /*'required' => 'true',*/ ], ],
+			/*3 Tag Motor*/ [ "class" => 'col-md-3', "wdth" => 3, "type" => 'input', "label" => 'Tag',"disabled" => true,"data" => ['type' => 'text','name' => 'TagMot','id' => 'TagMot', 'class' => 'form-control', /*'required' => 'true',*/ ], ],
+			/*3 Marca Motor*/ [ "class" => 'col-md-3', "wdth" => 3, "type" => 'input', "label" => 'Marca',"disabled" => true,"data" => ['type' => 'text','name' => 'MarcaMot','id' => 'MarcaMot', 'class' => 'form-control', /*'required' => 'true',*/ ], ],
+			/*3 Serie Motor*/ [ "class" => 'col-md-3', "wdth" => 3, "type" => 'input', "label" => 'Serie',"disabled" => true,"data" => ['type' => 'text','name' => 'SerieMot','id' => 'SerieMot', 'class' => 'form-control', /*'required' => 'true',*/ ], ],
+			/*3 Potencia Motor*/ [ "class" => 'col-md-3', "wdth" => 3, "type" => 'input', "label" => 'Potencia',"disabled" => true,"data" => ['type' => 'text','name' => 'Potencia','id' => 'Potencia', 'class' => 'form-control', /*'required' => 'true',*/ ], ],
+			/*3 Tension Motor*/ [ "class" => 'col-md-3', "wdth" => 3, "type" => 'input', "label" => 'Tension',"disabled" => true,"data" => ['type' => 'text','name' => 'TensionMot','id' => 'TensionMot', 'class' => 'form-control', /*'required' => 'true',*/ ], ],
+			/*3 Corriente Motor*/ [ "class" => 'col-md-3', "wdth" => 3, "type" => 'input', "label" => 'Corriente',"disabled" => true,"data" => ['type' => 'text','name' => 'CorrienteMot','id' => 'CorrienteMot', 'class' => 'form-control', /*'required' => 'true',*/ ], ],
+			/*3 Velocidad Motor*/ [ "class" => 'col-md-3', "wdth" => 3, "type" => 'input', "label" => 'Velocidad',"disabled" => true,"data" => ['type' => 'text','name' => 'VelocidadMot','id' => 'VelocidadMot', 'class' => 'form-control', /*'required' => 'true',*/ ], ],
+		
+			// /*4 Nro Liq*/ [ "class" => 'col-md-', "wdth" => 0, "type" => 'input', "label" => '',"disabled" => $a["b"],'valid-feed' => "Correcto",'invalid-feed' => "Campo Obligatorio","data" => ['type' => 'text','name' => '', 'id' => '', 'class' => 'form-control', /*'required' => 'true',*/ ], ],
+			// /*4 Centro Costos*/ [ "class" => 'col-md-4 mb-4', "wdth" => 4, "type" => 'input', "label" => 'Centro de Costos', "disabled" => $a["b"], "data" => ['type' => 'text','name' => 'CcosLiq', 'id' => 'CcosLiq', 'class' => 'form-control', ], ],
 		];
-		$d["inp2"] = [//Lista de Inputs Tabla Items
-			[//Legend Items
-				"class" => 'col-md-12', //Clase del div que lo contiene
-				"wdth" => 12, //Peso, si llega a 12 nuevo row
-				"type" => 'legend', //select, input, legend, check, button, text
-				"label" => 'Lista Items',
-			],
-			[// Button Nuevo Item
-				"class" => "col-md-12",
-				"wdth" => 12, //select, input, legend, check, button, text
-				"type" => "button",
-				"label" => "Nuevo Item",
-				"disabled" => $a["b"],
-				"icon" => "fas fa-plus",
-				"data" => ["class"=>"btn btn-primary", 'id' => "btitems", 'style' => "color: white;",], //"data-toggle"=>"modal", "data-target"=>"#mitems",
-			],
-			[// Tabla de Items
-				"class" => "col-md-12 text-center",
-				"wdth" => 12, //select, input, legend, check, button, text
-				"type" => "text",
-				"text" => '<table id="titems" class="table table-striped table-bordered display" style="width:100%"></table>'
-			],
-			[// Total texto
-				"class" => "col-md-6 text-center",
-				"wdth" => 6, //select, input, legend, check, button, text
-				"type" => "text",
-				"text" => "<p class='pull-right'>Total:</p>"
-			],
-			[// Total Soles Input
-				"class" => 'col-md-2 mb-3', //Clase del div que lo contiene
-				"wdth" => 2, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"data" => ['type' => 'number','name' => 'TotLiq', 'id' => 'TotLiq', 'class' => 'form-control', 'disabled' => "true",], //Opciones, si es un select, sino Otros atributos
-			],
-			[// Total Soles Input
-				"class" => 'col-md-2 mb-3', //Clase del div que lo contiene
-				"wdth" => 4, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"data" => ['type' => 'number','name' => 'TotdLiq', 'id' => 'TotdLiq', 'class' => 'form-control', 'disabled' => "true",], //Opciones, si es un select, sino Otros atributos
-			],
-			[// Dinero Entregado texto
-				"class" => "col-md-6 text-center",
-				"wdth" => 6, //select, input, legend, check, button, text
-				"type" => "text",
-				"text" => "<p class='pull-right'>Dinero Entregado:</p>"
-			],
-			[// Dinero Entregado Soles Input
-				"class" => 'col-md-2 mb-3', //Clase del div que lo contiene
-				"wdth" => 2, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"data" => ['type' => 'number','name' => 'EntrLiq', 'id' => 'EntrLiq', 'class' => 'form-control', 'disabled' => "true",], //Opciones, si es un select, sino Otros atributos
-			],
-			[// Dinero Entregado Soles Input
-				"class" => 'col-md-2 mb-3', //Clase del div que lo contiene
-				"wdth" => 4, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"data" => ['type' => 'number','name' => 'EntrdLiq', 'id' => 'EntrdLiq', 'class' => 'form-control', 'disabled' => "true",], //Opciones, si es un select, sino Otros atributos
-			],
-			[// Saldo texto
-				"class" => "col-md-6 text-center",
-				"wdth" => 6, //select, input, legend, check, button, text
-				"type" => "text",
-				"text" => "<p class='pull-right'>Saldo:</p>"
-			],
-			[// Saldo Soles Input
-				"class" => 'col-md-2 mb-3', //Clase del div que lo contiene
-				"wdth" => 2, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"data" => ['type' => 'number','name' => 'SalLiq', 'id' => 'SalLiq', 'class' => 'form-control', 'disabled' => "true",], //Opciones, si es un select, sino Otros atributos
-			],
-			[// Saldo Soles Input
-				"class" => 'col-md-2 mb-3', //Clase del div que lo contiene
-				"wdth" => 4, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"data" => ['type' => 'number','name' => 'SaldLiq', 'id' => 'SaldLiq', 'class' => 'form-control', 'disabled' => "true",], //Opciones, si es un select, sino Otros atributos
-			],
-		];
-		$d["inp3"] = [//Lista de Inputs Tabla Pago
-			[//Legend Pago
-				"class" => 'col-md-12', //Clase del div que lo contiene
-				"wdth" => 12, //Peso, si llega a 12 nuevo row
-				"type" => 'legend', //select, input, legend, check, button, text
-				"label" => 'Lista Pagos',
-			],
-			[// Button Nuevo Pago
-				"class" => "col-md-12",
-				"wdth" => 12, //select, input, legend, check, button, text
-				"type" => "button",
-				"label" => "Nuevo Pago",
-				"disabled" => $a["b"],
-				"icon" => "fas fa-plus",
-				"data" => ["class"=>"btn btn-primary", "data-toggle"=>"modal", "data-target"=>"#mpagos", 'style' => "color: white;",],
-			],
-			[//Tabla de Pagos
-				"class" => "col-md-12 text-center",
-				"wdth" => 12, //select, input, legend, check, button, text
-				"type" => "text",
-				"text" => '<table id="tpagos" class="table table-striped table-bordered display" style="width:100%"></table>'
-			],
-			[// Total texto
-				"class" => "col-md-6 text-center",
-				"wdth" => 6, //select, input, legend, check, button, text
-				"type" => "text",
-				"text" => "<p class='pull-right'>Total:</p>"
-			],
-			[// Saldo Soles Input
-				"class" => 'col-md-2 mb-3', //Clase del div que lo contiene
-				"wdth" => 2, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"data" => ['type' => 'number','name' => 'EntrLiq', 'id' => 'EntrLiq', 'class' => 'form-control', 'disabled' => "true",], //Opciones, si es un select, sino Otros atributos
-			],
-			[// Saldo Soles Input
-				"class" => 'col-md-2 mb-3', //Clase del div que lo contiene
-				"wdth" => 4, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"data" => ['type' => 'number','name' => 'EntrdLiq', 'id' => 'EntrdLiq', 'class' => 'form-control', 'disabled' => "true",], //Opciones, si es un select, sino Otros atributos
-			],
-		];
-		$d["inpit"] = [//Lista de Inputs Item
+		$d["inpper"] = [//Inputs Perno
 			[// ID
 				"class" => '',
 				"wdth" => 0, //Peso, si llega a 12 nuevo row
 				"type" => 'input', //select, input, legend, check, button, text
 				"data" => ['type' => 'hidden', 'name' => 'IdItem', 'id' => 'IdItem'], //Opciones, si es un select, sino Otros atributos
-			],
-			[// ID liq
-				"class" => '',
-				"wdth" => 0, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"data" => ['type' => 'hidden', 'name' => 'IdLiq',"value"=>$a['id']], //Opciones, si es un select, sino Otros atributos
 			],
 			[// Fecha
 				"class" => 'col-md-12 mb-3', //Clase del div que lo contiene
@@ -444,36 +224,6 @@ class Manttomot extends BaseController
 				"type" => 'input', //select, input, legend, check, button, text
 				"disabled" => $a["b"],
 				"data" => ['type' => 'text','name' => 'LugarItem', 'id' => 'LugarItem', "placeholder" => "Lugar", 'class' => 'form-control',], //Opciones, si es un select, sino Otros atributos
-			],
-			[// Num Doc
-				"class" => 'col-md-6 mb-3', //Clase del div que lo contiene
-				"wdth" => 6, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"disabled" => $a["b"],
-				"data" => ['type' => 'text','name' => 'NdocItem', 'id' => 'NdocItem', "placeholder" => "Num Doc", 'class' => 'form-control',"required" => "true"], //Opciones, si es un select, sino Otros atributos
-			],
-			[// Establecimiento
-				"class" => 'col-md-6 mb-3', //Clase del div que lo contiene
-				"wdth" => 6, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"disabled" => $a["b"],
-				"data" => ['type' => 'text','name' => 'EstabItem', 'id' => 'EstabItem', "placeholder" => "Establecimiento", 'class' => 'form-control',], //Opciones, si es un select, sino Otros atributos
-			],
-			[// Descripcion
-				"class" => 'col-md-6 mb-3', //Clase del div que lo contiene
-				"wdth" => 6, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"disabled" => $a["b"],
-				"data" => ['type' => 'text','name' => 'DescItem', 'id' => 'DescItem', "placeholder" => "Descripción", 'class' => 'form-control',], //Opciones, si es un select, sino Otros atributos
-			],
-			[// Grupo Presupuesto
-				"class" => 'col-md-6 mb-3', //Clase del div que lo contiene
-				"wdth" => 3, //Peso, si llega a 12 nuevo row
-				"type" => 'select', //select, input, legend, check, button, text
-				"label" => 'Grupo',
-				"disabled" => $a["b"],
-				"data" => ["name"=>"IdGpres","id"=>"IdGpres", 'class' => 'form-control', "style" => "width: 100%;", "required" => "true"], //Opciones, si es un select, sino Otros atributos
-				"options" => $a["plgp"], //Opciones, si es un select, sino Otros atributos
 			],
 			[// Presupuesto
 				"class" => 'col-md-6 mb-3', //Clase del div que lo contiene
@@ -505,107 +255,38 @@ class Manttomot extends BaseController
 				"preigtext" => 'S/.',
 				"data" => ['type' => 'number','name' => 'CostItem', 'id' => 'CostItem', "min" => "0", "max" => "1000", 'class' => 'form-control',], //Opciones, si es un select, sino Otros atributos
 			],
-			[// Dolares
-				"class" => 'col-md-6 mb-3', //Clase del div que lo contiene
-				"wdth" => 6, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"disabled" => $a["b"],
-				"preigtext" => '$',
-				"data" => ['type' => 'number','name' => 'CostdItem', 'id' => 'CostdItem', "min" => "0", "max" => "1000", 'class' => 'form-control',], //Opciones, si es un select, sino Otros atributos
-			],
-		];
-		$d["inppg"] = [//Lista de Inputs Pagos
-			[// ID
-				"class" => '',
-				"wdth" => 0, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"data" => ['type' => 'hidden', 'name' => 'IdPago', 'id' => 'IdPago'], //Opciones, si es un select, sino Otros atributos
-			],
-			[// ID liq
-				"class" => '',
-				"wdth" => 0, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"data" => ['type' => 'hidden', 'name' => 'IdLiq',"value"=>$a['id']], //Opciones, si es un select, sino Otros atributos
-			],
-			[// Fecha
-				"class" => 'col-md-12 mb-3', //Clase del div que lo contiene
-				"wdth" => 12, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"disabled" => $a["b"],
-				"data" => ['type' => 'date','name' => 'FechPago', 'id' => 'FechPago', 'class' => 'form-control', 'value' => date("Y-m-d"),], //Opciones, si es un select, sino Otros atributos
-			],
-			[//Legend Datos
-				"class" => 'col-md-12', //Clase del div que lo contiene
-				"wdth" => 12, //Peso, si llega a 12 nuevo row
-				"type" => 'legend', //select, input, legend, check, button, text
-				"label" => 'Datos',
-			],
-			[// Num Oper
-				"class" => 'col-md-6 mb-3', //Clase del div que lo contiene
-				"wdth" => 6, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"disabled" => $a["b"],
-				"data" => ['type' => 'text','name' => 'NoperPago', 'id' => 'NoperPago', "maxlenght" => "45", "placeholder" => "Num Operación", 'class' => 'form-control','required' => true,], //Opciones, si es un select, sino Otros atributos
-			],
-			[// Descripcion
-				"class" => 'col-md-6 mb-3', //Clase del div que lo contiene
-				"wdth" => 6, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"disabled" => $a["b"],
-				"data" => ['type' => 'text','name' => 'DescPago', 'id' => 'DescPago', "placeholder" => "Descripción", 'class' => 'form-control',], //Opciones, si es un select, sino Otros atributos
-			],
-			[//Legend Importe
-				"class" => 'col-md-12', //Clase del div que lo contiene
-				"wdth" => 12, //Peso, si llega a 12 nuevo row
-				"type" => 'legend', //select, input, legend, check, button, text
-				"label" => 'Importe',
-			],
-			[// Soles
-				"class" => 'col-md-6 mb-3', //Clase del div que lo contiene
-				"wdth" => 6, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"disabled" => $a["b"],
-				"data" => ['type' => 'number','name' => 'ImpPago', 'id' => 'ImpPago', "min" => "0", "max" => "1000", "placeholder" => "S/.", 'class' => 'form-control',], //Opciones, si es un select, sino Otros atributos
-			],
-			[// Dolares
-				"class" => 'col-md-6 mb-3', //Clase del div que lo contiene
-				"wdth" => 6, //Peso, si llega a 12 nuevo row
-				"type" => 'input', //select, input, legend, check, button, text
-				"disabled" => $a["b"],
-				"data" => ['type' => 'number','name' => 'ImpdPago', 'id' => 'ImpdPago', "min" => "0", "max" => "1000", "placeholder" => "$", 'class' => 'form-control',], //Opciones, si es un select, sino Otros atributos
-			],
 		];
 		return $d;
 	}
 
 	// AJAX
-	public function ajaxlpar() //Ajax lista liquidaciones
+	// Paradas
+	public function ajaxlpar() //Ajax lista Paradas
 	{
 		if(!session()->get("IdUsu")) return redirect()->to('/login');
 		$idu = session()->get("IdUsu");
 		$tusu = session()->get("IdTUsu");
 		if($tusu == 1) //Técnico ve las Paradas que ha modificado
 			$dt = $this->model->db->table('paradas')
-				->select("*")
+				->select("*,ucre.NomUsu as NomUsuCre,usup.NomUsu as NomUsuSup")
+				->join("usuarios ucre","ucre.IdUsu = paradas.UsuCre")
+				->join("usuarios usup","usup.IdUsu = paradas.UsuSup","left")
 				->where(["UsuCre" => $idu])
 				->get()->getResultArray();
 		else //Supervisor ve las paradas asignadas a él mismo
 			$dt = $this->model->db->table('paradas')
-				->select("*")
+				->select("*,ucre.NomUsu as NomUsuCre,usup.NomUsu as NomUsuSup")
+				->join("usuarios ucre","ucre.IdUsu = paradas.UsuCre")
+				->join("usuarios usup","usup.IdUsu = paradas.UsuSup","left")
 				->where(["UsuSup" => $idu])
 				->get()->getResultArray();
 		return $this->setResponseFormat('json')->respond(["data" => $dt]);
 	}
-	public function ajaxeditar() //Editar Liquidacion
+	public function ajaxedtpar() //Editar Paradas
 	{
 		$p = $this->request->getVar();
 		try {
 			$b = false;
-			// print_r($p);
-			// echo $p["IdLiq"]." ".(isset($p["IdLiq"])?"Iset":"Not Iset")." ".(isEmpty($p["IdLiq"]) ? "Is Empty" : "Not empty");
-			if(isset($p["IdRevisor"]) && $p["IdRevisor"] == "") $p["IdRevisor"] = null;
-			if(isset($p["IdLiq"]) && $p["IdLiq"] == "") $p["IdLiq"] = null;
-			$p["FupdLiq"] = date("Y-m-d H:i");
 			if(!isset($p["IdLiq"])) {
 				unset($p["IdLiq"]);
 				$p["IdTrab"] = session()->get("IdUsu");
@@ -624,11 +305,69 @@ class Manttomot extends BaseController
 		}
 		return redirect()->to('/liqs');
 	}
-	public function ajaxeli() //Eliminar una liquidacion
+	public function ajaxdelpar() //Eliminar parada
 	{
 		$id = $this->request->getVar("id");
 		try {
-			$b = $this->model->delete($id);
+			$b = $this->model->db->table('regevalmot')->where(["IdReg" => $id])->update(["FecDel" => date('Y-m-d')]);
+			if($b) return $this->setResponseFormat('json')->respond(["m" => "Liquidación eliminada", "r"=>true]);
+			else return $this->setResponseFormat('json')->respond(["m" => "Error al guardar, si la liquidación tiene pagos o items no se puede eliminar", "r"=>false]);
+			// session()->setFlashdata(['msg' => 'Operación correcta','r' => true]);
+			// session()->setFlashdata(['msg' => 'Error al guardar, si la liquidación tiene pagos o items no se puede eliminar','r' => false]);
+		} catch (\Throwable $th) {
+			return $this->setResponseFormat('json')->respond(["m" => 'Error al eliminar, la liquidación tiene pagos o items', "msg" => $th->getMessage(),'r' => false]);
+		}
+	}
+	// Registros
+	public function ajaxlreg() //Ajax lista Registros
+	{
+		if(!session()->get("IdUsu")) return redirect()->to('/login');
+		$idu = session()->get("IdUsu");
+		$tusu = session()->get("IdTUsu");
+		if($tusu == 1) //Técnico ve las Paradas que ha modificado
+			$dt = $this->model->db->table('regevalmot')
+				->select("*,ucre.NomUsu as NomUsuCre,usup.NomUsu as NomUsuSup")
+				->join("usuarios ucre","ucre.IdUsu = regevalmot.UsuCre")
+				->join("usuarios usup","usup.IdUsu = regevalmot.UsuSup","left")
+				->where(["UsuCre" => $idu])
+				->get()->getResultArray();
+		else //Supervisor ve los registros asignados a él mismo
+			$dt = $this->model->db->table('regevalmot')
+				->select("*,ucre.NomUsu as NomUsuCre,usup.NomUsu as NomUsuSup")
+				->join("usuarios ucre","ucre.IdUsu = regevalmot.UsuCre")
+				->join("usuarios usup","usup.IdUsu = regevalmot.UsuSup","left")
+				->where(["UsuSup" => $idu])
+				->get()->getResultArray();
+		return $this->setResponseFormat('json')->respond(["data" => $dt]);
+	}
+	public function ajaxedtreg() //Editar Registro Motor
+	{
+		$p = $this->request->getVar();
+		try {
+			$b = false;
+			if(!isset($p["IdLiq"])) {
+				unset($p["IdLiq"]);
+				$p["IdTrab"] = session()->get("IdUsu");
+				$p["FcreLiq"] = date("Y-m-d H:i");
+				$b = $this->model->insert($p);
+			}
+			else{
+				$id = $p["IdLiq"];
+				unset($p["IdLiq"]);
+				$b = $this->model->update($id,$p);
+			}
+			if($b) return $this->setResponseFormat('json')->respond(["m" => "Operación Correcta", "r"=>true, "q" => $this->model->db->getLastQuery()->getQuery()]);
+			else return $this->setResponseFormat('json')->respond(["m" => "Datos erróneos", "r"=>true]);
+		} catch (\Throwable $th) {
+			return $this->setResponseFormat('json')->respond(["m" => "Puede que no haya conexión o que haya un error en el servidor", "r"=>false, "q" => $this->model->db->getLastQuery()->getQuery()]); //.$th->getMessage()." ".$this->model->getLastQuery()->getQuery()
+		}
+		return redirect()->to('/liqs');
+	}
+	public function ajaxdelreg() //Eliminar un Registro
+	{
+		$id = $this->request->getVar("id");
+		try {
+			$b = $this->model->db->table('regevalmot')->where(["IdReg" => $id])->update(["FecDel" => date('Y-m-d')]);
 			if($b) return $this->setResponseFormat('json')->respond(["m" => "Liquidación eliminada", "r"=>true]);
 			else return $this->setResponseFormat('json')->respond(["m" => "Error al guardar, si la liquidación tiene pagos o items no se puede eliminar", "r"=>false]);
 			// session()->setFlashdata(['msg' => 'Operación correcta','r' => true]);

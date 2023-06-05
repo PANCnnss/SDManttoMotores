@@ -27,7 +27,7 @@
 							<table id="tpar" class="table table-striped table-bordered display" style="width:100%"></table>
 						</div>
 						<div class="tab-pane" id="tabs2">
-							<a style="color: white;" onclick="editPar(null)" class="btn btn-primary mb-2"><i class="fas fa-plus"></i>&nbsp; Nuevo Registro</a>
+							<a style="color: white;" onclick="editReg(null)" class="btn btn-primary mb-2"><i class="fas fa-plus"></i>&nbsp; Nuevo Registro</a>
 							<table id="treg" class="table table-striped table-bordered display" style="width:100%"></table>
 						</div>
 					</div>
@@ -89,17 +89,57 @@
             l = {"0": "<a class='btn btn-rounded btn-danger' title='Por Revisar'></a>",
 				"1": "<a class='btn btn-rounded btn-primary' title='Completo'></a>", 
 				"2": "<a class='btn btn-rounded btn-success' title='Aceptado'></a>"}
-            return l[row.EstLiq];
+            return l[row.Estado];
           },
           targets: cols.length-2 //Column Estado
         },
         { //Acciones
             render: function ( data, type, row ) {
                 // console.log("ROW>",data,type,row);
-                return '<a href="'+cadenaurl+ctrl+"/editar/"+row.IdLiq+'" title="Editar Liquidacion" class="btn waves-effect btn-circle waves-light"><i class="ti-pencil-alt text-success"></i></a>'
-                + '<a onclick="ajaxeli('+row.IdLiq+')" title="Eliminar Liquidacion" class="btn waves-effect btn-circle waves-light"><i class="ti-close text-danger"></i></a>';
+                return '<a href="ajaxedtpar('+row.IdPar+')" title="Editar Liquidacion" class="btn waves-effect btn-circle waves-light"><i class="ti-pencil-alt text-success"></i></a>'
+                + '<a onclick="ajaxdelpar('+row.IdPar+')" title="Eliminar Liquidacion" class="btn waves-effect btn-circle waves-light"><i class="ti-close text-danger"></i></a>';
             },
             targets: cols.length-1 //Column Acciones
+        },
+      ],
+      // Atributos comprimidos
+      "scrollX": true,"autoWidth": true,"scrollCollapse": true,"pagingType": "full_numbers","lengthMenu": [ [15, 25, 50, -1], [15, 25, 50, "All"] ],language: { paginate: { previous: "<", next: ">" } },"paging": true,"processing": true,"searching": true,"lengthChange": true,"ordering": false,"info": false,"bProcessing": true,"pageLength": 15,"oLanguage": {"sUrl": cadenaurl + "resources/json/spanish.json"},pagingType: $(window).width() < 768 ? "simple" : "simple_numbers",
+      "fnInitComplete": function () {
+        const ps = new PerfectScrollbar('.dataTables_scrollBody')
+        $(".selectAll").on( "click", function(e) {
+          if ($(this).is( ":checked" )) {
+              tabasis.rows().select();        
+          } else {
+              tabasis.rows().deselect(); 
+          }
+        })
+      },
+      "fnDrawCallback": function (oSettings) {const ps = new PerfectScrollbar('.dataTables_scrollBody');},
+    })
+	treg = $("#treg").DataTable({
+      ajax:{
+        url: cadenaurl + '/' + ctrl + "/ajaxlreg",
+        type: "POST"
+      },
+      order: [[ 2, 'asc' ]],
+      columns: colsr,
+      columnDefs: [
+        {//Estado
+          render: function ( data, type, row ) {
+            l = {"0": "<a class='btn btn-rounded btn-danger' title='Por Revisar'></a>",
+				"1": "<a class='btn btn-rounded btn-primary' title='Completo'></a>", 
+				"2": "<a class='btn btn-rounded btn-success' title='Aceptado'></a>"}
+            return l[row.EstReg];
+          },
+          targets: colsr.length-2 //Column Estado
+        },
+        { //Acciones
+            render: function ( data, type, row ) {
+                // console.log("ROW>",data,type,row);
+                return '<a href="'+cadenaurl+ctrl+"/editar/"+row.IdReg+'" title="Editar Liquidacion" class="btn waves-effect btn-circle waves-light"><i class="ti-pencil-alt text-success"></i></a>'
+                + '<a onclick="ajaxeli('+row.IdReg+')" title="Eliminar Liquidacion" class="btn waves-effect btn-circle waves-light"><i class="ti-close text-danger"></i></a>';
+            },
+            targets: colsr.length-1 //Column Acciones
         },
       ],
       // Atributos comprimidos

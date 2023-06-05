@@ -12,6 +12,10 @@
 
 <?= $this->section('content') ?>
 
+<?php use App\Libraries\PrintForm; 
+// var_dump($dtreg);
+?>
+
 <div class="container-fluid">
   <div class="row">
     <div class="col-lg-12 col-12">
@@ -19,7 +23,7 @@
       <div class="card">
         <form class="needs-validation" id="fliq" novalidate method="post">
           <div class="card-body">
-            
+            <?php PrintForm::printFormCard($inpreg, (isset($dtreg) ? $dtreg : null)); ?>
           </div>
           <div class="card-footer">
             <div class="text-center">
@@ -29,27 +33,15 @@
           </div>
         </form>
       </div>
-      <!-- Lista Items -->
+      <!-- Lista Pernos -->
       <div class="card">
         <div class="card-body">
-          <div class="form-row">
-            <?php foreach ($inp2 as $input) : ?>
-              <?php if (($w + $input["wdth"]) > 12) : //Si se sobrepasan los 12 md o si es el inicio 
-              ?>
-          </div>
-          <div class="form-row">
-          <?php endif;
-              $w = (($w + $input["wdth"]) > 12 ? $input["wdth"] : $w + $input["wdth"]); ?>
-          <div class="<?= $input["class"] ?>">
-            <?php printForm($input, $b, ($b ? $dtreg : null)); ?>
-          </div>
-        <?php endforeach ?>
-          </div>
+          tests
         </div>
       </div>
     </div>
   </div>
-  <!-- Modals -->
+  <!-- Modal Nuevo Perno -->
   <div id="mitems" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="milabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -75,20 +67,7 @@
           <div class="tab-content">
             <div class="tab-pane show active" id="tab1">
               <form id="fitems" class="needs-validation form-horizontal">
-                <div class="form-row">
-                  <?php foreach ($inpit as $input) : ?>
-                    <?php if (($w + $input["wdth"]) > 12) : //Si se sobrepasan los 12 md o si es el inicio 
-                    ?>
-                </div>
-                <div class="form-row">
-                <?php endif;
-                    $w = (($w + $input["wdth"]) > 12 ? $input["wdth"] : $w + $input["wdth"]); ?>
-                <div class="<?= $input["class"] ?>">
-                  <?php printForm($input, false, null); ?>
-                  <div class="valid-feedback"> Correcto.</div>
-                  <div class="invalid-feedback"> Error. </div>
-                </div>
-              <?php endforeach ?>
+                <?php PrintForm::printFormCard($inpper, (isset($dtreg) ? null : null)); ?>
               </form>
             </div>
           </div>
@@ -101,44 +80,10 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer" style="display: <?= ($b2 ? "none" : "true") ?>;">
+      <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
         <button type="submit" form="fitems" id="sitems" class="btn btn-success">Guardar</button>
-        <button type="button" id="btgimg" class="btn btn-warning">Guardar Imágenes</button>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
-<div id="mpagos" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header d-flex align-items-center">
-        <h3 class="modal-title" id="milabel">Item</h3>
-        <button type="button" class="close ml-auto" data-dismiss="modal" aria-hidden="true">x</button>
-      </div>
-      <form id="fpagos" class="needs-validation modal-content form-horizontal">
-        <div class="modal-body">
-          <div class="form-row">
-            <?php foreach ($inppg as $input) : ?>
-              <?php if (($w + $input["wdth"]) > 12) : //Si se sobrepasan los 12 md o si es el inicio 
-              ?>
-          </div>
-          <div class="form-row">
-          <?php endif;
-              $w = (($w + $input["wdth"]) > 12 ? $input["wdth"] : $w + $input["wdth"]); ?>
-          <div class="<?= $input["class"] ?>">
-            <?php printForm($input, false, null); ?>
-            <div class="valid-feedback"> Correcto.</div>
-            <div class="invalid-feedback"> Error. </div>
-          </div>
-        <?php endforeach ?>
-          </div>
-        </div>
-        <div class="modal-footer" style="display: <?= ($b2 ? "none" : "true") ?>;">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-success">Guardar</button>
-        </div>
-      </form>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div>
@@ -149,100 +94,6 @@
   // DROPZONE
   Dropzone.autoDiscover = false;
   var ref, ref2; //global para eliminar archivo
-  var dpz = new Dropzone("div#iddrop", {
-    url: cadenaurl + ctrl + "/upload",
-    maxFiles: 3,
-    maxFilesize: 8,
-    dictDefaultMessage: "Subir archivos",
-    dictRemoveFile: "Quitar",
-    dictCancelUpload: "Cancelar",
-    acceptedFiles: ".png,.jpg,.pdf",
-    addRemoveLinks: true, //Links para remover archivo añadido
-    autoProcessQueue: false, //No subir archivos automáticamente
-    clickable: true,
-    method: "POST",
-    template: function(options) {
-      return `
-        <div class="dz-preview dz-file-preview">
-          <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-          <div class="dz-error-message"><span data-dz-errormessage></span></div>
-          <div class="dz-success-mark">${options.doneIcon}</div>
-          <div class="dz-error-mark">${options.errorIcon}</div>
-          <div class="dz-image">
-            <div data-dz-thumbnail-bg></div>
-          </div>
-          <div class="dz-details">
-            <div class="dz-size"><span data-dz-size></span></div>
-            <div class="dz-url"><span data-dz-url></span></div>
-            <div class="dz-filename"><span data-dz-name></span></div>
-          </div>
-        </div>
-      `;
-    },
-    init: function() {
-      this.on("sending", function(file, xhr, formData) {
-        id = $("#mitems").find("#IdItem").val()
-        formData.append("id", id);
-        file.id = id
-      });
-    },
-    removedfile: function(file) { //DESACTIVADO, se puede usar cuando se puedan colocar botones personalizados
-      var name = file.url;
-      // console.log(name,file.id);
-      if (file.id != null) { //Si no ha sido subido solo quitar de la vista
-        ref = file.previewElement;
-        ref2 = file.previewElement;
-        cfajax("delfile", {
-            name: file.url,
-            id: file.id
-          },
-          (res) => {
-            return (ref) != null ? ref.parentNode.removeChild(ref2) : void 0; //Eliminar Elemento
-          }, "Eliminar?", "Se eliminará permanentemente el archivo")
-        return;
-      }
-      var _ref = file.previewElement;
-      return _ref.parentNode.removeChild(file.previewElement);
-    },
-    success: function(file, response) {
-      if (response != 0) {
-        // Download link
-        var anchorEl = document.createElement('a');
-        anchorEl.setAttribute('href', cadenaurl + response);
-        anchorEl.setAttribute('download', 'true');
-        anchorEl.setAttribute('class', 'dz-remove');
-        anchorEl.innerHTML = " Descargar";
-        file.previewTemplate.appendChild(anchorEl);
-      }
-    },
-  });
-  $("#btgimg").on("click", () => {
-    dpz.processQueue();
-  });
-
-  // Mostrar toast
-  var fd = <?php echo (session()->getFlashdata() ? json_encode(session()->getFlashdata()) : json_encode("")) ?>;
-  var b2 = parseInt("<?php echo (isset($b2) ? (int)$b2 : false) ?>") == 1;
-  if (fd != "") {
-    //Mostrar toast
-    if (fd.r) toastr.success(fd.msg, 'Éxito');
-    else toastr.error(fd.msg, 'Error');
-  }
-  // Otras funciones 
-  function setopt(id, dt) { //Colocar las opciones a un select
-    sel = $(document).find("#" + id)
-    sel.empty();
-    for (k in dt) {
-      // console.log(k, dt[k])
-      opt = document.createElement('option')
-      opt.innerHTML = dt[k]
-      opt.value = k
-      if (dt[k] == "") opt.selected = "selected"
-      sel[0].appendChild(opt)
-    }
-  }
-
-  //Submit form 
   //  Validacion
   (function() {
     'use strict';
