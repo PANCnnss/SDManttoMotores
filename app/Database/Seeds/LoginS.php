@@ -13,7 +13,7 @@ class LoginS extends Seeder
 		$this->db->query('TRUNCATE menus_tusuarios');
 		$this->db->query('TRUNCATE tusuarios');
 		$this->db->query('TRUNCATE menus');
-		// $this->db->query('TRUNCATE usuarios');
+		$this->db->query('TRUNCATE usuarios');
 		
 
 		$all = [];
@@ -22,9 +22,9 @@ class LoginS extends Seeder
 				'NomTUsu'
 			],
 			"data" => [
-				// ['Técnico'], //1
-				// ['Supervisor'], //2
-				// ['Admin'], //3
+				['Técnico'], //1
+				['Supervisor'], //2
+				['Admin'], //3
 			],
 		];
 		$all["menus"] = [
@@ -65,11 +65,11 @@ class LoginS extends Seeder
 			],
 			"data" => [
 				// TRAB
-				// ['TECNICO 1','TEC1',password_hash("Asdf1234", PASSWORD_DEFAULT),"1"],
+				['TECNICO 1','TEC1',password_hash("Asdf1234", PASSWORD_DEFAULT),"1"],
 				// // JEFE
-				// ['SUPERVISOR 1','SUP1',password_hash("Asdf1234", PASSWORD_DEFAULT),"2"],
+				['SUPERVISOR 1','SUP1',password_hash("Asdf1234", PASSWORD_DEFAULT),"2"],
 				// // ADMIN
-				// ['ADMIN 1','ADMIN1',password_hash("Asdf1234", PASSWORD_DEFAULT),"3"],
+				['ADMIN 1','ADMIN1',password_hash("Asdf1234", PASSWORD_DEFAULT),"3"],
 				
 			],
 		];

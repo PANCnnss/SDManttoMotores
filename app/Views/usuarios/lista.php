@@ -7,12 +7,12 @@
 			<div class="card">
 				<div class="card-body">
 					<div class="tab-content">
-                        <div class="row">
-                            <div class="col-12">
-                                <a style="color:white" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModalCenter" id="btnModal"><i class="fas fa-plus"></i> Nuevo Usuario</a>
-                                <table id="tlistAllUsuarios" class="table table-striped table-bordered nowrap" cellspacing="0" style="width:100%; "></table>
-                            </div>
-                        </div>
+              <div class="row">
+                  <div class="col-12">
+                      <a style="color:white" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModalCenter" id="btnModal"><i class="fas fa-plus"></i> Nuevo Usuario</a>
+                      <table id="tlistAllUsuarios" class="table table-striped table-bordered nowrap" cellspacing="0" style="width:100%; "></table>
+                  </div>
+              </div>
 					</div>
 				</div> <!-- end card-body-->
 			</div> <!-- end card-->
@@ -165,26 +165,6 @@
 
 <!-- NUEVO USUARIO Y ACTUALIZACION USUARIO-->
 <script>
-  //Submit form 
-  //  Validacion
-  // (function() {
-  //   'use strict';
-  //   window.addEventListener('load', function() {
-  //     // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  //     var forms = document.getElementsByClassName('needs-validation');
-  //     // Loop over them and prevent submission
-  //     var validation = Array.prototype.filter.call(forms, function(form) {
-  //       form.addEventListener('submit', function(event) {
-  //         if (form.checkValidity() === false) {
-  //           event.preventDefault();
-  //           event.stopPropagation();
-  //         }
-  //         form.classList.add('was-validated');
-  //       }, false);
-  //     });
-  //   }, false);
-  // })();
-
   $(document).ready(function() {
     $('#postUsuario').validate({
       rules: {

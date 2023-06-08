@@ -24,6 +24,23 @@
         <form class="needs-validation" id="fliq" novalidate method="post">
           <div class="card-body">
             <?php PrintForm::printFormCard($inpreg, (isset($dtreg) ? $dtreg : null)); ?>
+            <div class="card">
+                <!-- Formulario 1 -->
+                <div class="card-body">
+                    <div class="form-group form-check form-check-inline">
+                        <input type="checkbox" name="checkbox1" id="checkbox1" class="form-check-input">
+                        <label class="form-check-label" for="checkbox1">Solicitud pruebas de Resistencia de Aislamiento</label>
+                    </div>
+                    <div class="form-group form-check form-check-inline">
+                        <input type="checkbox" name="checkbox2" id="checkbox2" class="form-check-input">
+                        <label class="form-check-label" for="checkbox2">Solicitud pruebas de resistencia Ohmica</label>
+                    </div>
+                    <div class="form-group form-check form-check-inline">
+                        <input type="checkbox" name="checkbox3" id="checkbox3" class="form-check-input">
+                        <label class="form-check-label" for="checkbox3">Solicitud torque de pernos</label>
+                    </div>
+                </div>
+            </div>
           </div>
           <div class="card-footer">
             <div class="text-center">
@@ -33,16 +50,129 @@
           </div>
         </form>
       </div>
-      <!-- Lista Pernos -->
-      <div class="card">
+
+      <div class="card" id="card1" style="display: none;">
         <div class="card-body">
-          tests
-        </div>
+
+          <!-- Formulario 1 -->
+              <h3>LECTURA DE RESISTENCIA DE AISLAMIENTO A TIERRA (ESTATOR)</h3>
+              <form id="formMegometro">
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="form-group">
+                              <label for="megohmetro">Megóhmetro Megabras:</label>
+                              <input type="text" name="megohmetro" id="megohmetro" class="form-control">
+                          </div>
+                          <div class="form-group">
+                              <label for="serie">Serie:</label>
+                              <input type="text" name="serie" id="serie" class="form-control">
+                          </div>
+                          <div class="form-group">
+                              <label for="tiempo_prueba">Tiempo de prueba:</label>
+                              <input type="text" name="tiempo_prueba" id="tiempo_prueba" class="form-control">
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="form-group">
+                              <label for="tension_prueba">Tensión de Prueba:</label>
+                              <input type="text" name="tension_prueba" id="tension_prueba" class="form-control">
+                          </div>
+                          <div class="form-group">
+                              <label for="temperatura_ambiente">Temperatura ambiente:</label>
+                              <input type="text" name="temperatura_ambiente" id="temperatura_ambiente" class="form-control">
+                          </div>
+                      </div>
+                  </div>
+
+                  <h5>DATOS DE PRUEBA CON EL MEGOMETRO</h5>
+                  <button class="btn btn-sm btn-secondary" type="button" data-toggle="collapse" data-target="#tablaMegometro" aria-expanded="false" aria-controls="tablaMegometro">
+                      Desplegar/ocultar tabla
+                  </button>
+                  <div class="collapse mt-3" id="tablaMegometro">
+                      <table class="table">
+                          <thead>
+                              <tr>
+                                  <th>TIEMPO</th>
+                                  <th>LECTURA (giga ohms)</th>
+                                  <th>INDICE</th>
+                                  <th>OBSERVACIONES</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                  <td><input type="text" name="tiempo1" class="form-control" value="1"></td>
+                                  <td><input type="text" name="lectura1" class="form-control"></td>
+                                  <td><input type="text" name="indice1" class="form-control"></td>
+                                  <td rowspan="1"><textarea name="observaciones" class="form-control"></textarea></td>
+                              </tr>
+                              <tr>
+                                  <td><input type="text" name="tiempo2" class="form-control"></td>
+                                  <td><input type="text" name="lectura2" class="form-control"></td>
+                                  <td><input type="text" name="indice2" class="form-control"></td>
+                                  <td rowspan="1"><textarea name="observaciones" class="form-control"></textarea></td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </form>
+          </div>
       </div>
+
+      <div class="card" id="card2" style="display: none;">
+          <!-- Formulario 2 -->
+          <div class="card-body">
+              <h3>LECTURA DE MEDIDA DE RESISTENCIA ÓHMICA - ESTATOR</h3>
+              <form id="formMicrohmetro">
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="form-group">
+                              <label for="microhmetro">Microhmímetro Metrel:</label>
+                              <input type="text" name="microhmetro" id="microhmetro" class="form-control">
+                          </div>
+                          <div class="form-group">
+                              <label for="cert_calibracion">N° Cert. Calibración:</label>
+                              <input type="text" name="cert_calibracion" id="cert_calibracion" class="form-control">
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="form-group">
+                              <label for="temperatura_ambiente">Temperatura ambiente:</label>
+                              <input type="text" name="temperatura_ambiente" id="temperatura_ambiente" class="form-control">
+                          </div>
+                          <div class="form-group">
+                              <label for="conexion_prueba">Conexión de prueba:</label>
+                              <input type="text" name="conexion_prueba" id="conexion_prueba" class="form-control">
+                          </div>
+                      </div>
+                  </div>
+              </form>
+          </div>
+      </div>
+
+      <div class="card" id="card3" style="display: none;">
+        <!-- Formulario 3 -->
+        <h3>Formulario 3</h3>
+        <form id="form3">
+            <div class="form-group">
+                <label for="fecha">Fecha de nacimiento:</label>
+                <input type="date" name="fecha" id="fecha" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="genero">Género:</label>
+                <select name="genero" id="genero" class="form-control">
+                    <option value="masculino">Masculino</option>
+                    <option value="femenino">Femenino</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
+        </form>
+      </div>
+
+
     </div>
   </div>
-  <!-- Modal Nuevo Perno -->
-  <div id="mitems" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="milabel">
+
+  <!-- <div id="mitems" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="milabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header d-flex align-items-center" novalidate>
@@ -84,8 +214,8 @@
         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
         <button type="submit" form="fitems" id="sitems" class="btn btn-success">Guardar</button>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
+    </div>
+  </div> -->
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('js') ?>
@@ -442,6 +572,27 @@
       );
     })
   })
+</script>
+
+<script>
+  $(document).ready(function() {
+      $('#checkbox1, #checkbox2, #checkbox3').change(function() {
+          // Obtener el ID del checkbox seleccionado
+          var checkboxId = $(this).attr('id');
+
+          // Mostrar u ocultar la card correspondiente según el checkbox seleccionado
+          if ($(this).is(':checked')) {
+              $('#card' + checkboxId.slice(-1)).show();
+          } else {
+              $('#card' + checkboxId.slice(-1)).hide();
+          }
+      });
+
+      $('#miFormulario').submit(function(event) {
+          event.preventDefault();
+          // Resto del código para enviar el formulario
+      });
+  });
 </script>
 
 <?= $this->endSection() ?>
