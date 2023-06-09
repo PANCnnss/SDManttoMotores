@@ -100,13 +100,13 @@
                           </thead>
                           <tbody>
                               <tr>
-                                  <td><input type="text" name="tiempo1" class="form-control" value="1"></td>
+                                  <td>30 segundos</td>
                                   <td><input type="text" name="lectura1" class="form-control"></td>
                                   <td><input type="text" name="indice1" class="form-control"></td>
                                   <td rowspan="1"><textarea name="observaciones" class="form-control"></textarea></td>
                               </tr>
                               <tr>
-                                  <td><input type="text" name="tiempo2" class="form-control"></td>
+                                  <td>60 segundos</td>
                                   <td><input type="text" name="lectura2" class="form-control"></td>
                                   <td><input type="text" name="indice2" class="form-control"></td>
                                   <td rowspan="1"><textarea name="observaciones" class="form-control"></textarea></td>
@@ -145,27 +145,155 @@
                           </div>
                       </div>
                   </div>
+                  <button class="btn btn-sm btn-secondary" type="button" data-toggle="collapse" data-target="#tablaMegometro" aria-expanded="false" aria-controls="tablaMegometro">
+                      Mostrar/ocultar tabla
+                  </button>
+                  <div class="collapse mt-3" id="tablaMegometro">
+                      <table class="table">
+                          <thead>
+                              <tr>
+                                  <th>BORNES</th>
+                                  <th>1-2</th>
+                                  <th>2-3</th>
+                                  <th>3-1</th>
+                                  <th>OBSERVACIONES</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                  <td>LECTURA</td>
+                                  <td><input type="text" name="1-2_1" class="form-control"></td>
+                                  <td><input type="text" name="2-3_1" class="form-control"></td>
+                                  <td><input type="text" name="3-1_1" class="form-control"></td>
+                                  <td rowspan="1"><textarea name="observaciones2" class="form-control"></textarea></td>
+                              </tr>
+                              <tr>
+                                  <td>DESVALANCE</td>
+                                  <td><input type="text" name="1-2_2" class="form-control"></td>
+                                  <td><input type="text" name="2-3_2" class="form-control"></td>
+                                  <td><input type="text" name="3-1_2" class="form-control"></td>
+                                  <td rowspan="1"><textarea name="observaciones2" class="form-control"></textarea></td>
+                              </tr>
+                              <tr>
+                                  <td>RESULTADOS</td>
+                                  <td><input type="text" name="1-2_3" class="form-control"></td>
+                                  <td><input type="text" name="2-3_3" class="form-control"></td>
+                                  <td><input type="text" name="3-1_3" class="form-control"></td>
+                                  <td rowspan="3"><textarea name="observaciones2" class="form-control"></textarea></td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
               </form>
           </div>
       </div>
 
       <div class="card" id="card3" style="display: none;">
         <!-- Formulario 3 -->
-        <h3>Formulario 3</h3>
-        <form id="form3">
-            <div class="form-group">
-                <label for="fecha">Fecha de nacimiento:</label>
-                <input type="date" name="fecha" id="fecha" class="form-control">
+        <div class="card-body">
+          <h3>Observaciones antes de realizar el torque de pernos</h3>
+          <form id="form3">
+              <table class="table">
+                  <thead>
+                      <tr>
+                          <th rowspan="2" class="text-center">VERIFICACIONES PREVIAS AL TORQUE DE PERNOS</th>
+                          <th colspan="3" class="text-center">SEGUNDA CABECERA</th>
+                      </tr>
+                      <tr>
+                          <th class="text-center">SI</th>
+                          <th class="text-center">NO</th>
+                          <th class="text-center">N/A</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td class="text-center">Limpieza de Pernos</td>
+                          <td class="text-center"><input type="checkbox" name="si1" class="form-check-input"></td>
+                          <td class="text-center"><input type="checkbox" name="no1" class="form-check-input"></td>
+                          <td class="text-center"><input type="checkbox" name="na1" class="form-check-input"></td>
+                      </tr>
+                      <tr>
+                          <td class="text-center">Limpieza de Tuercas</td>
+                          <td class="text-center"><input type="checkbox" name="si2" class="form-check-input"></td>
+                          <td class="text-center"><input type="checkbox" name="no2" class="form-check-input"></td>
+                          <td class="text-center"><input type="checkbox" name="na2" class="form-check-input"></td>
+                      </tr>
+                      <tr>
+                          <td class="text-center">Limpieza de Caras de Bridas</td>
+                          <td class="text-center"><input type="checkbox" name="si3" class="form-check-input"></td>
+                          <td class="text-center"><input type="checkbox" name="no3" class="form-check-input"></td>
+                          <td class="text-center"><input type="checkbox" name="na3" class="form-check-input"></td>
+                      </tr>
+                      <tr>
+                          <td class="text-center">Pernos Revisados</td>
+                          <td class="text-center"><input type="checkbox" name="si4" class="form-check-input"></td>
+                          <td class="text-center"><input type="checkbox" name="no4" class="form-check-input"></td>
+                          <td class="text-center"><input type="checkbox" name="na4" class="form-check-input"></td>
+                      </tr>
+                  </tbody>
+              </table>
+              <button class="btn btn-sm btn-secondary mb-3" type="button" data-toggle="collapse" data-target="#tablaEvPernos" aria-expanded="false" aria-controls="tablaVerificaciones">
+                Mostrar/ocultar tabla Evaluacion Pernos
+              </button>
+            <div class="collapse" id="tablaEvPernos">
+              <h4>Evaluación de Pernos</h4>
+              <button class="btn btn-sm btn-primary mt-3" id="agregarFila" type="button">
+                  <i class="fas fa-plus"></i> Agregar fila
+              </button>
+              <table class="table" id="tablaEvaluacionPernos">
+                  <thead>
+                      <tr>
+                          <th>N° de Perno</th>
+                          <th>Grado de Dureza</th>
+                          <th>Tipo</th>
+                          <th>Diametro Pulgada</th>
+                          <th>Torque (ft/lb) Requerido</th>
+                          <th>Torque (ft/lb) Medido</th>
+                          <th>Unidad de Medida</th>
+                          <th>Fecha</th>
+                          <th>Observaciones</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td><input type="text" name="perno" class="form-control"></td>
+                          <td><input type="text" name="dureza" class="form-control"></td>
+                          <td><input type="text" name="tipo" class="form-control"></td>
+                          <td><input type="text" name="diametro" class="form-control"></td>
+                          <td><input type="text" name="requerido" class="form-control" readonly></td>
+                          <td><input type="text" name="medido" class="form-control"></td>
+                          <td><input type="text" name="unidad" class="form-control" readonly></td>
+                          <td><input type="text" name="fecha" class="form-control"></td>
+                          <td><textarea name="observaciones" class="form-control"></textarea></td>
+                      </tr>
+                  </tbody>
+              </table>
             </div>
-            <div class="form-group">
-                <label for="genero">Género:</label>
-                <select name="genero" id="genero" class="form-control">
-                    <option value="masculino">Masculino</option>
-                    <option value="femenino">Femenino</option>
-                    <option value="otro">Otro</option>
-                </select>
-            </div>
-        </form>
+          </form>
+
+          <!-- Modal -->
+          <div class="modal fade" id="infoModalCard3" tabindex="-1" role="dialog" aria-labelledby="infoModalCard3Label" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                      <div class="modal-body">
+                          <h4>Secuencia de Torque</h4>
+                          <img src="<?= base_url('resources/imagenes/imagenpernos.png')?>" alt="Imagen informativa" class="img-fluid">
+                          <h4 style="margin-top:15px;">Grados de dureza</h4>
+                          <img src="<?= base_url('resources/imagenes/imagenpernos2.jpeg')?>" alt="Imagen informativa" class="img-fluid">
+                          <h4 style="margin-top:15px;">Apriete de tornillos segun grado</h4>
+                          <img src="<?= base_url('resources/imagenes/imagenpernos3.jpeg')?>" alt="Imagen informativa" class="img-fluid">
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+        </div>
+
+        <div class="card-footer">
+            <button class="btn btn-sm btn-info float-right" data-toggle="modal" data-target="#infoModalCard3">
+                <i class="fas fa-info-circle"></i>
+            </button>
+        </div>
       </div>
 
 
@@ -593,6 +721,35 @@
           // Resto del código para enviar el formulario
       });
   });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#agregarFila').on('click', function() {
+            var filaVacia = false;
+            $('#tablaEvaluacionPernos tbody tr:first-child input').each(function() {
+                if ($(this).val() === '') {
+                    filaVacia = true;
+                    return false; // Salir del bucle cuando se encuentra un campo vacío
+                }
+            });
+            
+            if (!filaVacia) {
+                var fila = '<tr>' +
+                    '<td><input type="text" name="perno[]" class="form-control"></td>' +
+                    '<td><input type="text" name="dureza[]" class="form-control"></td>' +
+                    '<td><input type="text" name="tipo[]" class="form-control"></td>' +
+                    '<td><input type="text" name="diametro[]" class="form-control"></td>' +
+                    '<td><input type="text" name="requerido[]" class="form-control" readonly></td>' +
+                    '<td><input type="text" name="medido[]" class="form-control"></td>' +
+                    '<td><input type="text" name="unidad[]" class="form-control" readonly></td>' +
+                    '<td><input type="text" name="fecha[]" class="form-control"></td>' +
+                    '<td><textarea name="observaciones[]" class="form-control"></textarea></td>' +
+                    '</tr>';
+                $('#tablaEvaluacionPernos tbody').append(fila);
+            }
+        });
+    });
 </script>
 
 <?= $this->endSection() ?>
