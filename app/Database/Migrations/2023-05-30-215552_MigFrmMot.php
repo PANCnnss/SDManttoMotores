@@ -79,10 +79,10 @@ class MigFrmMot extends Migration
 				'HabPruResTieReg' => [ 'type'=> 'INT', 'constraint'=> 1,'default'=> 0,'comment' => 'Habilitado Pruebas de Resistencia de Aislamiento a Tierra',],
 				'HabPruResOhmReg' => [ 'type'=> 'INT', 'constraint'=> 11,'default'=> 0,'comment' => 'Habilitado Pruebas de Resistencia Óhmica',],
 				'HabTorqueReg' => [ 'type'=> 'INT', 'constraint'=> 1,'default'=> 0,'comment' => 'Habilitado Solicita Torque de Pernos',],
-					'TorLimPerReg' => [ 'type'=> 'INT', 'constraint'=> 1,'null'=> true,'comment' => 'Limpieza Pernos (0: No, 1: Sí, 2: N/A)',],
-					'TorLimTueReg' => [ 'type'=> 'INT', 'constraint'=> 1,'null'=> true,'comment' => 'Limpieza Tuercas (0: No, 1: Sí, 2: N/A)',],
-					'TorLimCarReg' => [ 'type'=> 'INT', 'constraint'=> 1,'null'=> true,'comment' => 'Limpieza Caras de Bridas (0: No, 1: Sí, 2: N/A)',],
-					'TorRevPerReg' => [ 'type'=> 'INT', 'constraint'=> 1,'null'=> true,'comment' => 'Pernos Revisados (0: No, 1: Sí, 2: N/A)',],
+				'TorLimPerReg' => [ 'type'=> 'INT', 'constraint'=> 1,'null'=> true,'comment' => 'Limpieza Pernos (0: No, 1: Sí, 2: N/A)',],
+				'TorLimTueReg' => [ 'type'=> 'INT', 'constraint'=> 1,'null'=> true,'comment' => 'Limpieza Tuercas (0: No, 1: Sí, 2: N/A)',],
+				'TorLimCarReg' => [ 'type'=> 'INT', 'constraint'=> 1,'null'=> true,'comment' => 'Limpieza Caras de Bridas (0: No, 1: Sí, 2: N/A)',],
+				'TorRevPerReg' => [ 'type'=> 'INT', 'constraint'=> 1,'null'=> true,'comment' => 'Pernos Revisados (0: No, 1: Sí, 2: N/A)',],
 				'LlaveRangoReg' => [ 'type'=> 'varchar', 'constraint'=> 24,'null'=> true,'comment' => 'Rango',],
 				'LlaveMarcaReg' => [ 'type'=> 'varchar', 'constraint'=> 24,'null'=> true,'comment' => 'Marca',],
 				'LlaveNroCertReg' => [ 'type'=> 'varchar', 'constraint'=> 24,'null'=> true,'comment' => 'N° Certificado',],
@@ -139,6 +139,10 @@ class MigFrmMot extends Migration
 				'MPru60sLectReg' => [ 'type'=> 'decimal', 'constraint'=> '4,1','null'=> true,'comment' => 'Lectura Giga Ohms 30 segundos',],
 				'MPru60sIndReg' => [ 'type'=> 'varchar', 'constraint'=> 24,'null'=> true,'comment' => 'Índice Ej IA = 1.70',],
 				'MPru60sObsReg' => [ 'type'=> 'varchar', 'constraint'=> 128,'null'=> true,'comment' => 'Observaciones',],
+
+				'MPru10mLectReg' => [ 'type'=> 'decimal', 'constraint'=> '4,1','null'=> true,'comment' => 'Lectura Giga Ohms 10 minutos',],
+				'MPru10mIndReg' => [ 'type'=> 'varchar', 'constraint'=> 24,'null'=> true,'comment' => 'Índice Ej IA = 1.70',],
+				'MPru10mObsReg' => [ 'type'=> 'varchar', 'constraint'=> 128,'null'=> true,'comment' => 'Observaciones',],
 			]);
 			$this->forge->addKey('IdRegMeg', true);
 			$this->forge->addForeignKey('IdReg','regevalmot','IdReg');

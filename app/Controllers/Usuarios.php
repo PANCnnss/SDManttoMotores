@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-require_once('..\app\Libraries\signature-to-image.php');
+require_once('../app/Libraries/signature-to-image.php');
 use App\Controllers\BaseController;
 use App\Libraries\PrintForm;
 use CodeIgniter\API\ResponseTrait;

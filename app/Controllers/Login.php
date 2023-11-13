@@ -20,11 +20,12 @@ class Login extends BaseController
 	public function index()
 	{
 		$d = $this->data;
-		return view('Login/form', $d);
+		return view('login/form', $d);
 	}
 	public function ajaxlogin()
 	{
 		$s = session();
+		$usuario = $s->get("IdTUsu");
 		// $p = $this->request->getPost();
 		$l = $this->request->getVar('logus');
 		$p = $this->request->getVar('pasus');
@@ -33,10 +34,9 @@ class Login extends BaseController
 		if(isset($q)){
 			// print_r($q);
 			$s->set($q);
-			return redirect()->to('/usuarios');
+			return redirect()->to('/manttomot/nuevoreg');
 		}else{
 			$s->setFlashdata(['msg' => 'El usuario está inactivo o las contraseña no coinciden.','r' => false]);
-			// print_r($this->model->getLastQuery()->getQuery());
 			return redirect()->to('/login');
 		}
 	}

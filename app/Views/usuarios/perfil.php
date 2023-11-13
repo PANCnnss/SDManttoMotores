@@ -7,7 +7,7 @@
 		<div class="col-lg-12 col-12">
 			<div class="card">
 				<div class="card-body">
-					<h4 class="card-title">Validation with Custom Styles</h4>
+					<h4 class="card-title">Perfil de Usuario</h4>
 					<form class="needs-validation" novalidate action="<?=base_url('usuarios/submiteditar')?>" method="post">
 						<div class="form-row">
 							<input type="hidden" name="IdUsu" value="<?= $udata["IdUsu"] ?>">
@@ -21,26 +21,31 @@
 									Campo obligatorio.
 								</div>
 							</div>
+							<div class="col-md-4 mb-3">
+								<label for="LogUsu">Usuario para Logueo</label>
+								<input type="text" class="form-control" name="LogUsu" id="LogUsu" maxlength="100" placeholder="Credencial Logueo" value="<?=$udata['LogUsu']?>" required>
+								<div class="valid-feedback">
+									Correcto.
+								</div>
+								<div class="invalid-feedback">
+									Campo obligatorio.
+								</div>
+							</div>
+							<div class="col-md-4 mb-3">
+								<label for="EmpUsu">Empresa del Usuario</label>
+								<input type="text" class="form-control" name="EmpUsu" id="EmpUsu" maxlength="20" placeholder="Empresa del usuario" value="<?=$udata['EmpUsu']?>" required>
+								<div class="valid-feedback">
+									Correcto.
+								</div>
+								<div class="invalid-feedback">
+									Campo obligatorio.
+								</div>
+							</div>
 						</div>
 						<button class="btn btn-primary" type="submit">Guardar</button>
 						<a class="btn waves-effect waves-light btn-danger" style="color: white;" href="<?=base_url('usuarios/rcon')?>">Cambiar Contraseña</a>
 					</form>
-					<form action="<?=base_url("usuarios/saveSign")?>" method="post" class="fpad">
-						<div class="row mt-4">
-							<div class="col-md-6 mb-3">
-								<canvas class="pad" style="border: 5px solid black;"></canvas>
-								<input type="hidden" name="output" id="output" class="output">
-								<fieldset>
-									<input class="btn btn-info" type="button" value="Limpiar" />
-									<button class="btn btn-primary" type="submit">Guardar Archivo</button>
-									<a class="btn btn-danger" href="<?=base_url("usuarios/pdf")?>" target="_blank">PDF</a>
-								</fieldset>
-							</div>
-							<div class="col-md-6">
-								<img src='<?=base_url("resources/imgsignat/signature.png")?>' style='border: 5pt solid black;' />
-							</div>
-						</div>
-					</form>
+
 				</div>
 			</div>
 		</div>

@@ -13,10 +13,14 @@
     <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url("theme/src/assets/images/favicon.png") ?>">
     <link href="<?= base_url('theme/dist/css/style.min.css')?>" rel="stylesheet">
     <link href="<?= base_url('theme/src/assets/libs/sweetalert2/dist/sweetalert2.min.css')?>" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
     <!-- CSS -->
     <?php foreach ($css as $v) : ?>
         <link href="<?= $v ?>" rel="stylesheet"></script>
     <?php endforeach ?>
+
     <?= $this->renderSection('header') ?>
 </head>
 
@@ -143,15 +147,19 @@
                         <!-- ============================================================== -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src=<?=base_url("theme/src/assets/images/users/1.jpg")?> alt="user" width="30" class="profile-pic rounded-circle" />
+                            <?php if (session()->get("IdTUsu") === '2' || session()->get("IdTUsu") === '4') : ?>  
+                                <img src=<?=base_url("theme/src/assets/images/users/antapaccay.png")?> alt="user" width="30" class="profile-pic rounded-circle" />
+                            <?php elseif (session()->get("IdTUsu") === '1') : ?>
+                                <img src=<?=base_url("theme/src/assets/images/users/SdiseLogo.png")?> alt="user" width="30" class="profile-pic rounded-circle" />
+                            <?php endif; ?>
                             </a>
                             <div class="dropdown-menu mailbox dropdown-menu-right scale-up">
                                 <ul class="dropdown-user list-style-none">
                                     <li>
                                         <div class="dw-user-box p-3 d-flex">
-                                            <div class="u-img"><img src=<?=base_url("theme/src/assets/images/users/1.jpg")?> alt="user" class="rounded" width="80"></div>
+                                            <div class="u-img"><img src=<?=base_url("theme/src/assets/images/users/SdiseLogo.png")?> alt="user" class="rounded" width="80"></div>
                                             <div class="u-text ml-2">
-                                                <h4 class="mb-0"><?= $s->get('NomUsuario') ?></h4>
+                                                <h4 class="mb-0"><?= $s->get('NomUsu') ?></h4>
                                                 <p class="text-muted mb-1 font-14"><?= $s->get('CorrUsuario') ?></p>
                                                 <a href="<?=base_url("usuarios")?>" class="btn btn-rounded btn-danger btn-sm text-white d-inline-block">Ver Perfil</a>
                                             </div>
@@ -211,7 +219,22 @@
                             }
                         ?>
                         <li class="nav-small-cap"><i class="mdi mdi-dots-horizontal"></i> <span class="hide-menu"></span></li>
+
+                        <li class="nav-item" <?php echo (session()->get("IdTUsu") !== '2') ? 'hidden' : ''; ?>>
+                            <a class="nav-link" href="https://manttomot.sdise.net/manttomot/dashSup">DASHBOARD SUPERVISOR</a>
+                        </li>
+                        
+                        <li class="nav-item" <?php echo (session()->get("IdTUsu") !== '1') ? 'hidden' : ''; ?>>
+                            <a class="nav-link" href="https://manttomot.sdise.net/manttomot/dashTec">DASHBOARD TECNICO</a>
+                        </li>
+
+                        <li class="nav-item" <?php echo (session()->get("IdTUsu") !== '4') ? 'hidden' : ''; ?>>
+                            <a class="nav-link" href="https://manttomot.sdise.net/manttomot/dashPlanner">DASHBOARD PLANNER</a>
+                        </li>
+
                     </ul>
+
+
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
@@ -227,11 +250,11 @@
                 <?= $this->renderSection('content') ?>
             </div>
             <footer class="footer">
-                © 2021 SDISE - BACKUS
+                © 2023 SDISE - ANTAPACCAY
             </footer>
         </div>
     </div>
-    <aside class="customizer">
+    <!-- <aside class="customizer">
         <a href="javascript:void(0)" class="service-panel-toggle"><i class="fa fa-cog"></i></a>
         <div class="customizer-body">
             <ul class="nav customizer-tab" role="tablist">
@@ -241,10 +264,8 @@
                 </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">
-                <!-- Tab 1 -->
                 <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                     <div class="p-3 border-bottom">
-                        <!-- Sidebar -->
                         <h5 class="font-medium mb-2 mt-2">Layout Settings</h5>
                         <div class="checkbox checkbox-info mt-3">
                             <input type="checkbox" name="theme-view" class="material-inputs" id="theme-view">
@@ -264,7 +285,6 @@
                         </div> 
                     </div>
                     <div class="p-3 border-bottom">
-                        <!-- Logo BG -->
                         <h5 class="font-medium mb-2 mt-2">Logo Backgrounds</h5>
                         <ul class="theme-color m-0 p-0">
                             <li class="theme-item list-inline-item mr-1"><a href="javascript:void(0)" class="theme-link rounded-circle d-block"
@@ -280,10 +300,8 @@
                             <li class="theme-item list-inline-item mr-1"><a href="javascript:void(0)" class="theme-link rounded-circle d-block"
                                     data-logobg="skin6"></a></li>
                         </ul>
-                        <!-- Logo BG -->
                     </div>
                     <div class="p-3 border-bottom">
-                        <!-- Navbar BG -->
                         <h5 class="font-medium mb-2 mt-2">Navbar Backgrounds</h5>
                         <ul class="theme-color m-0 p-0">
                             <li class="theme-item list-inline-item mr-1"><a href="javascript:void(0)" class="theme-link rounded-circle d-block"
@@ -299,10 +317,8 @@
                             <li class="theme-item list-inline-item mr-1"><a href="javascript:void(0)" class="theme-link rounded-circle d-block"
                                     data-navbarbg="skin6"></a></li>
                         </ul>
-                        <!-- Navbar BG -->
                     </div>
                     <div class="p-3 border-bottom">
-                        <!-- Logo BG -->
                         <h5 class="font-medium mb-2 mt-2">Sidebar Backgrounds</h5>
                         <ul class="theme-color m-0 p-0">
                             <li class="theme-item list-inline-item mr-1"><a href="javascript:void(0)" class="theme-link rounded-circle d-block"
@@ -318,13 +334,11 @@
                             <li class="theme-item list-inline-item mr-1"><a href="javascript:void(0)" class="theme-link rounded-circle d-block"
                                     data-sidebarbg="skin6"></a></li>
                         </ul>
-                        <!-- Logo BG -->
                     </div>
                 </div>
-                <!-- End Tab 1 -->
             </div>
         </div>
-    </aside>
+    </aside>  -->
 
     <!-- JS -->
     <?php foreach ($js as $v) : ?>
@@ -340,8 +354,9 @@
                 $("#main-wrapper").toggleClass("show-sidebar");
                 $(".nav-toggler i").toggleClass("ti-menu");
             });
-        })
+        });
     </script>
+    
     <?= $this->renderSection('js') ?>
 
 </body>
@@ -350,5 +365,85 @@
     var ctrl = "<?= (isset($this->data["ctrl"]) ? $this->data["ctrl"] : "") ?>";
     var fd = <?php echo (session()->getFlashdata() ? json_encode(session()->getFlashdata()) : json_encode("")) ?>;
 </script>
+<script>
+    pathArray = location.href.split('/');
+    cadenaurl = pathArray[0] + "//" + pathArray[2] + "/";
+    var ctrl = '<?php echo (isset($ctrl) ? $ctrl : "") ?>';
+    
 
+    $(document).ready(function () {
+        fetchNotifications();
+        setInterval(fetchNotifications, 5000);
+
+        function fetchNotifications() {
+            $.ajax({
+                url: cadenaurl + ctrl + '/ajaxNotification',
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    $('.notifications').empty();
+                    console.log(response);
+                    for (var i = 0; i < response.length; i++) {
+                        var notification = response[i];
+                        var notificationItem = createNotificationItem(notification);
+
+                        $('.notifications').append(notificationItem);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr, status, error);
+                }
+            });
+        }
+
+        // Función para crear un elemento de notificación
+        function createNotificationItem(notification) {
+            var idTUsu = <?php echo json_encode(session()->get("IdTUsu")); ?>;
+            var message;
+            var notificationItem = $('<a>', {
+                'href': 'https://manttomot.sdise.net/manttomot/editar/'+ notification.IdReg,
+                'class': 'message-item d-flex align-items-center border-bottom px-3 py-2',
+            });
+
+            var iconClass = 'btn btn-primary rounded-circle btn-circle';
+            var icon = $('<span>', {
+                'class': iconClass
+            }).html('<i class="ti-user"></i>');
+
+            var contentDiv = $('<div>', {
+                'class': 'w-75 d-inline-block v-middle pl-2',
+            });
+
+            var title = $('<h5>', {
+                'class': 'message-title mb-0 mt-1'
+            }).text("Notificacion Tecnico");
+
+            if (idTUsu === '4') {
+                message = $('<p>', {
+                    'class': 'font-12',
+                    'css': {
+                        'line-height': '1.2' // Puedes ajustar este valor según tus preferencias
+                    }
+                 }).text("El usuario SUPERVISOR a "+ notification.descripcion + " " + notification.NomMot + "-" + notification.TagMot);
+            }else{
+                message = $('<p>', {
+                    'class': 'font-12',
+                    'css': {
+                        'line-height': '1.2' // Puedes ajustar este valor según tus preferencias
+                    }
+                 }).text("El usuario "+ notification.NomUsu + " terminó con el mantenimiento del motor " + notification.NomMot + "-" + notification.TagMot);
+            }
+            
+            var timestamp = $('<span>', {
+                'class': 'font-12 text-nowrap d-block text-muted'
+            }).text(notification.FecEjec);
+
+            contentDiv.append(title, message, timestamp);
+            notificationItem.append(icon, contentDiv);
+
+            return notificationItem;
+        }
+    });
+
+</script>
 </html>
